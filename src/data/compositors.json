@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "name": "The Weeknd",
+        "songId": [11, 12]
+    },
+    {
+        "id": 8,
+        "name": "Alan Walker",
+        "songId": [81]
+    },
+    {
+        "id": 2,
+        "name": "Eminem",
+        "songId": [21, 22]
+    },
+    {
+        "id": 3,
+        "name": "Robin Schulz",
+        "songId": [31, 32, 33]
+    },
+    {
+        "id": 4,
+        "name": "Roddy Ricch",
+        "songId": [41]
+    },
+    {
+        "id": 5,
+        "name": "Tones And I",
+        "songId": [51]
+    },
+    {
+        "id": 6,
+        "name": "Trevor Daniel",
+        "songId": [61]
+    },
+    {
+        "id": 7,
+        "name": "Drake",
+        "songId": [71]
+    },
+    {
+        "id": 9,
+        "name": "Rich The Kid",
+        "songId": [91]
+    }
+]
