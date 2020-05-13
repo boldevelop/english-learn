@@ -1,28 +1,44 @@
 import React from 'react';
 import {
     ACTIVE_PANEL,
-    ACTIVE_VIEW,
     SET_USER,
     SET_POPOUT,
     SET_COMPOSITORS,
     SET_SONGS,
     PUSH_HISTORY,
-    POP_HISTORY
+    POP_HISTORY, SET_TRANSLATE,
+    TOGGLE_MODAL_CARD_SONG, SET_SELECTED_COMPOSITOR_NAME
 } from "../constants/actionTypes";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 
 const initialState = {
     history: ['all'],
-    activeView: 'compositors',
     activePanel: 'all',
+    selectedCompositorName: '',
     user: null,
     popout: <ScreenSpinner size='large' />,
     compositors: [],
-    songs: []
+    songs: [],
+    translate: null,
+    modalCardSong: {
+        modalId: null,
+        songName: '',
+        songId: null
+    }
 };
 
 function rootReducer(state = initialState, action) {
     switch (action.type) {
+        case SET_SELECTED_COMPOSITOR_NAME:
+            return {
+                ...state,
+                selectedCompositorName: action.payload
+            }
+        case TOGGLE_MODAL_CARD_SONG:
+            return {
+                ...state,
+                modalCardSong: action.payload
+            }
         case POP_HISTORY:
             return {
                 ...state,
@@ -32,6 +48,11 @@ function rootReducer(state = initialState, action) {
             return {
                 ...state,
                 history: [...state.history, action.payload]
+            }
+        case SET_TRANSLATE:
+            return {
+                ...state,
+                translate: action.payload
             }
         case SET_SONGS:
             return {
@@ -52,11 +73,6 @@ function rootReducer(state = initialState, action) {
             return {
                 ...state,
                 user: action.payload
-            }
-        case ACTIVE_VIEW:
-            return {
-                ...state,
-                activeView: action.payload
             }
         case ACTIVE_PANEL:
             return {

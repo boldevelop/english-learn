@@ -1,0 +1,69 @@
+[
+  {
+    "id": 1111,
+    "text": [
+      {
+        "type": "Вступление"
+      },
+      {
+        "en": "I been on my own for long enough",
+        "ru": "Я был достаточно долго один"
+      },
+      {
+        "en": "Maybe you can show me how to love, maybe",
+        "ru": "Может быть, вы можете показать мне, как любить, может быть"
+      },
+      {
+        "en": "I been on my own for long enough",
+        "ru": "Я был достаточно долго один"
+      },
+      {
+        "en": "Maybe you can show me how to love, maybe",
+        "ru": "Может быть, вы можете показать мне, как любить, может быть"
+      },
+      {
+        "en": "I been on my own for long enough",
+        "ru": "Я был достаточно долго один"
+      },
+      {
+        "type": "Припев"
+      },
+      {
+        "en": "I been on my own for long enough",
+        "ru": "Я был достаточно долго один"
+      },
+      {
+        "en": "Maybe you can show me how to love, maybe",
+        "ru": "Может быть, вы можете показать мне, как любить, может быть"
+      },
+      {
+        "en": "I been on my own for long enough",
+        "ru": "Я был достаточно долго один"
+      },
+      {
+        "type": "куплет"
+      },
+      {
+        "en": "Maybe you can show me how to love, maybe",
+        "ru": "Может быть, вы можете показать мне, как любить, может быть"
+      }
+    ]
+  },
+  {
+    "id": 1112,
+    "text": [
+      {
+        "en": "In Your Eyes",
+        "ru": "Я пытался позвонить"
+      },
+      {
+        "en": "In Your Eyes",
+        "ru": "Я был достаточно долго один"
+      },
+      {
+        "en": "In Your Eyes",
+        "ru": "Может быть, вы можете показать мне, как любить, может быть"
+      }
+    ]
+  }
+]

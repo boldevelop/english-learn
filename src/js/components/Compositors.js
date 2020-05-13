@@ -6,7 +6,7 @@ export const Compositors = ({ onClick, compositors }) => {
         <Group separator="hide">
             <CardGrid>
                 {compositors.map(item => (
-                    <Card key={item.id} size="l" mode="shadow" onClick={() => onClick(item.songId)} style={{ marginBottom: 16 }}>
+                    <Card key={item.id} size="l" mode="shadow" onClick={() => onClick(item)} style={{ marginBottom: 16 }}>
                         <Div>
                             <Title level="1" weight="semibold" style={{ marginBottom: 16 }}>{item.name}</Title>
                         </Div>

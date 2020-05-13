@@ -1,15 +1,33 @@
 import React from 'react';
 import { takeEvery, call, put, select } from "redux-saga/effects";
-import {GO_BACK, GO_TO_PAGE, INITIAL_LOAD, SET_SELECTED_COMPOSITOR} from "../constants/actionTypes";
+import {
+  GO_BACK,
+  GO_TO_PAGE,
+  INITIAL_LOAD,
+  SET_SELECTED_COMPOSITOR,
+  SET_SELECTED_TRANSLATE
+} from "../constants/actionTypes";
 import bridge from '@vkontakte/vk-bridge';
-import {setUser, setPopout, setCompositors, setActivePanel, setSongs, pushHistory, popHistory, goToPage} from "../actions";
+import {
+  setUser,
+  setPopout,
+  setCompositors,
+  setActivePanel,
+  setSongs,
+  pushHistory,
+  popHistory,
+  goToPage,
+  setTranslate, setSelectedCompositorName
+} from "../actions";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import compositorsData from "../../data/compositors.json";
 import songsData from "../../data/songs.json";
+import translatedData from "../../data/translates.json";
 
 export default function* watcherSaga() {
   yield takeEvery(INITIAL_LOAD, initialSaga);
   yield takeEvery(SET_SELECTED_COMPOSITOR, selectedCompositorSaga);
+  yield takeEvery(SET_SELECTED_TRANSLATE, selectedTranslateSaga);
   yield takeEvery(GO_TO_PAGE, goToPageSaga);
   yield takeEvery(GO_BACK, goBack);
 }
@@ -59,8 +77,23 @@ function* selectedCompositorSaga(action) {
   try {
     yield put(goToPage('selected'));
     yield put(setPopout(<ScreenSpinner size='large' />));
-    const songs = yield call(loadSongs, action.payload);
+    const songs = yield call(loadSongs, action.payload.songId);
+    yield put(setSelectedCompositorName(action.payload.name));
     yield put(setSongs(songs));
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put(setPopout(null));
+  }
+}
+
+function* selectedTranslateSaga(action) {
+  try {
+    yield put(goToPage('translate'));
+    yield put(setPopout(<ScreenSpinner size='large' />));
+    const translate = yield call(loadTranslate, action.payload);
+    console.log(translate);
+    yield put(setTranslate(translate));
   } catch (e) {
     console.log(e);
   } finally {
@@ -82,4 +115,8 @@ function loadSongs(songsId) {
     })
   }
   return Promise.resolve(songs)
+}
+
+function loadTranslate(translatedId) {
+  return Promise.resolve(translatedData.filter((el) => el.id === translatedId)[0])
 }

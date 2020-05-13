@@ -1,66 +1,92 @@
 [
   {
     "id": 11,
+    "translateId": 1111,
+    "taskId": 111,
     "name": "Blinding Lights",
     "feat": null
   },
   {
     "id": 12,
+    "translateId": 1112,
+    "taskId": 111,
     "name": "In Your Eyes",
     "feat": null
   },
   {
     "id": 81,
+    "translateId": 111,
+    "taskId": 1111,
     "name": "Faded",
     "feat": null
   },
   {
     "id": 21,
+    "translateId": 111,
+    "taskId": 1111,
     "name": "Not Afraid",
     "feat": null
   },
   {
     "id": 22,
+    "translateId": 111,
+    "taskId": 1111,
     "name": "Love The Way You Lie",
     "feat": "Rihanna"
   },
   {
     "id": 31,
+    "translateId": 111,
+    "taskId": 1111,
     "name": "In Your Eyes",
     "feat": "Alida"
   },
   {
     "id": 32,
+    "translateId": 111,
+    "taskId": 1111,
     "name": "All This Love",
     "feat": "Harloe"
   },
   {
     "id": 33,
+    "translateId": 111,
+    "taskId": 1111,
     "name": "Sugar",
     "feat": "Francesco Yates"
   },
   {
     "id": 41,
+    "translateId": 111,
+    "taskId": 1111,
     "name": "The Box",
     "feat": null
   },
   {
     "id": 51,
+    "translateId": 111,
+    "taskId": 1111,
     "name": "Dance Monkey",
     "feat": null
   },
   {
     "id": 61,
+    "translateId": 111,
+    "taskId": 1111,
     "name": "Falling",
     "feat": null
   },
   {
     "id": 71,
+    "translateId": 111,
+    "taskId": 1111,
     "name": "Toosie Slide",
     "feat": null
   },
   {
     "id": 91,
+    "translateId": 111,
+    "taskId": 1111,
     "name": "Plug Walk",
     "feat": null
   }

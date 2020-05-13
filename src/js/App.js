@@ -2,20 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import bridge from '@vkontakte/vk-bridge';
 import '@vkontakte/vkui/dist/vkui.css';
-import { Root } from '@vkontakte/vkui';
 import { Compositors } from './components/Compositors';
 import { Songs } from './components/Songs';
-import { View, Panel, PanelHeader, PanelHeaderBack } from "@vkontakte/vkui";
-import { initialLoad, setSelectedCompositor, goBack } from "./actions";
+import {View, Panel, PanelHeader, PanelHeaderBack, ModalRoot, ModalCard} from "@vkontakte/vkui";
+import Icon56MusicOutline from '@vkontakte/icons/dist/56/music_outline';
+import {initialLoad, setSelectedCompositor, goBack, setSelectedTranslate, toggleModalCardSong} from "./actions";
 import ConfigProvider from "@vkontakte/vkui/dist/components/ConfigProvider/ConfigProvider";
+import {Translate} from "./components/Translate";
 
 const App = () => {
-	const activeView = useSelector(state => state.activeView)
 	const activePanel = useSelector(state => state.activePanel)
 	const compositors = useSelector(state => state.compositors)
 	const stateHistory = useSelector(state => state.history, shallowEqual)
+	const translate = useSelector(state => state.translate, shallowEqual)
 	const popout = useSelector(state => state.popout, shallowEqual)
 	const songs = useSelector(state => state.songs, shallowEqual)
+	const selectedCompositorName = useSelector(state => state.selectedCompositorName)
+	const activeModalData = useSelector(state => state.modalCardSong, shallowEqual)
 	const [scheme, SetScheme] = useState("bright_light")
 	const dispatch = useDispatch()
 
@@ -29,51 +32,99 @@ const App = () => {
 		dispatch(initialLoad());
 	}, [dispatch]);
 
-	const onClickCompositors = (arraySongsId) => {
-		dispatch(setSelectedCompositor(arraySongsId))
+	const onClickCompositors = (compositorData) => {
+		dispatch(setSelectedCompositor(compositorData))
 	}
 
-	const onGoToPage = () => {
-
+	const onClickSong = (ModalCardData) => {
+		dispatch(toggleModalCardSong(ModalCardData))
 	}
+
+	const closeModalData = {
+		modalId: null,
+		songName: '',
+		songId: null
+	}
+
+	const modal = (
+		<ModalRoot
+			activeModal={activeModalData.modalId}
+			onClose={() => dispatch(toggleModalCardSong(closeModalData))}
+		>
+			<ModalCard
+				id='card-song'
+				onClose={() => dispatch(toggleModalCardSong(closeModalData))}
+				icon={<Icon56MusicOutline />}
+				actionsLayout="vertical"
+				header={activeModalData.songName}
+				caption={selectedCompositorName}
+				actions={
+					[
+						{
+							title: 'Перевод',
+							mode: 'commerce',
+							action: () => {
+								dispatch(toggleModalCardSong(closeModalData))
+								dispatch(setSelectedTranslate(activeModalData.songId))
+							}
+						},
+						{
+							title: 'Упражнения',
+							mode: 'destructive',
+							action: () => {
+								console.log('tasks');
+							}
+						}
+					]
+				}
+			/>
+		</ModalRoot>
+	)
 
 	return (
 		<ConfigProvider isWebView={true} scheme={scheme}>
-			<Root activeView={activeView} popout={popout}>
-				<View id="compositors"
-					  history={stateHistory} // Ставим историю как массив панелей.
-					  onSwipeBack={() => dispatch(goBack())} // При свайпе выполняется данная функция.
-					  activePanel={activePanel}
-				>
-					<Panel id='all'>
-						<PanelHeader>Композиторы</PanelHeader>
-						{!!compositors.length && <Compositors
-							onClick={onClickCompositors}
-							compositors={compositors}
-						/>}
-					</Panel>
-					<Panel id='selected'>
-						<PanelHeader
-							left={
-								<PanelHeaderBack onClick={() => window.history.back()} />
-							}
-						>
-							Композиции
-						</PanelHeader>
-						<Songs songs={songs} onClick={() => window.history.back()} />
-					</Panel>
-					<Panel id='task'>
-						task
-					</Panel>
-				</View>
+			<View id="compositors"
+				  history={stateHistory} // Ставим историю как массив панелей.
+				  onSwipeBack={() => dispatch(goBack())} // При свайпе выполняется данная функция.
+				  activePanel={activePanel}
+				  popout={popout}
+				  modal={modal}
+			>
+				<Panel id='all'>
+					<PanelHeader>Композиторы</PanelHeader>
+					{!!compositors.length && <Compositors
+						onClick={onClickCompositors}
+						compositors={compositors}
+					/>}
+				</Panel>
 
-				<View id="translate" activePanel="song">
-					<Panel id="song">
-						translate song
-					</Panel>
-				</View>
+				<Panel id='selected'>
+					<PanelHeader
+						left={
+							<PanelHeaderBack onClick={() => window.history.back()} />
+						}
+					>
+						Композиции
+					</PanelHeader>
+					<Songs songs={songs} onClick={onClickSong} />
+				</Panel>
 
-			</Root>
+				<Panel id='task'>
+					task
+				</Panel>
+
+				<Panel id="translate">
+					<PanelHeader
+						left={
+							<PanelHeaderBack onClick={() => window.history.back()} />
+						}
+					>
+						Перевод
+					</PanelHeader>
+					{translate && <Translate translate={translate}/>}
+				</Panel>
+
+			</View>
 		</ConfigProvider>
 	);
 }
