@@ -9,6 +9,7 @@ export const Songs = ({ onClick, songs }) => {
                     const modalCardData = {
                         songId: item.translateId,
                         songName: item.name,
+                        tasksId: item.taskId,
                         modalId: 'card-song'
                     }
                     return (

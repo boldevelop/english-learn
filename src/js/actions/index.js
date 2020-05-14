@@ -10,8 +10,10 @@ export const setPopout = spinner => ({ type: TYPE.SET_POPOUT, payload: spinner }
 export const setActivePanel = panel => ({ type: TYPE.ACTIVE_PANEL, payload: panel });
 export const goBack = () => ({ type: TYPE.GO_BACK });
 export const goToPage = name => ({ type: TYPE.GO_TO_PAGE, payload: name });
+export const goToTasks = tasksId => ({ type: TYPE.GO_TO_TASKS, payload: tasksId });
 export const pushHistory = pageName => ({ type: TYPE.PUSH_HISTORY, payload: pageName });
 export const popHistory = lastIndex => ({ type: TYPE.POP_HISTORY, payload: lastIndex });
 export const setSelectedTranslate = songId => ({ type: TYPE.SET_SELECTED_TRANSLATE, payload: songId });
 export const setTranslate = translate => ({ type: TYPE.SET_TRANSLATE, payload: translate });
+export const setSongTasks = tasks => ({ type: TYPE.SET_SONG_TASKS, payload: tasks });
 export const toggleModalCardSong = cardSongData => ({ type: TYPE.TOGGLE_MODAL_CARD_SONG, payload: cardSongData });

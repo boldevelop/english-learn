@@ -11,19 +11,21 @@ import {
   pushHistory,
   popHistory,
   goToPage,
-  setTranslate, setSelectedCompositorName, toggleModalCardSong
+  setTranslate, setSelectedCompositorName, toggleModalCardSong, setSongTasks
 } from "../actions";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import compositorsData from "../../data/compositors.json";
 import songsData from "../../data/songs.json";
 import translatedData from "../../data/translates.json";
+import tasksData from "../../data/tasks.json";
 
 export default function* watcherSaga() {
   yield takeEvery(TYPE.INITIAL_LOAD, initialSaga);
   yield takeEvery(TYPE.SET_SELECTED_COMPOSITORS_SONG, selectedCompositorSaga);
   yield takeEvery(TYPE.SET_SELECTED_TRANSLATE, selectedTranslateSaga);
   yield takeEvery(TYPE.GO_TO_PAGE, goToPageSaga);
-  yield takeEvery(TYPE.GO_BACK, goBack);
+  yield takeEvery(TYPE.GO_BACK, goBackSaga);
+  yield takeEvery(TYPE.GO_TO_TASKS, goToTasksSaga);
 }
 
 function* goToPageSaga(action) {
@@ -37,7 +39,23 @@ function* goToPageSaga(action) {
   }
 }
 
-function* goBack() {
+function* goToTasksSaga(action) {
+  try {
+    const tasksId = action.payload.tasksId // В качестве аргумента принимаем id панели для перехода
+    const songName = action.payload.songName
+    yield put(setPopout(<ScreenSpinner size='large' />));
+    const tasks = yield call(loadTasks, tasksId)
+    yield put(setSongTasks({tasks, length: tasks.length, songName}))
+    console.log(tasks)
+  } catch(e) {
+    console.log(e)
+  } finally {
+    yield put(setPopout(null));
+    yield put(goToPage('task-0'));
+  }
+}
+
+function* goBackSaga() {
   try {
     const stateHistory = yield select(state => state.history)
     if (stateHistory.length === 1) {  // Если в массиве одно значение:
@@ -87,7 +105,6 @@ function* selectedTranslateSaga(action) {
     yield put(goToPage('translate'));
     yield put(setPopout(<ScreenSpinner size='large' />));
     const translate = yield call(loadTranslate, action.payload);
-    console.log(translate);
     yield put(setTranslate(translate));
   } catch (e) {
     console.log(e);
@@ -115,3 +132,16 @@ function loadSongs(songsId) {
 function loadTranslate(translatedId) {
   return Promise.resolve(translatedData.filter((el) => el.id === translatedId)[0])
 }
+
+function loadTasks(tasksId) {
+  let tasks = [];
+  for (const id of tasksId) {
+    tasksData.forEach(currentTask => {
+      if (currentTask.id === id) {
+        tasks.push(currentTask);
+      }
+    })
+  }
+  return Promise.resolve(tasks)
+}
+

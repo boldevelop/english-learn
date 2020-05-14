@@ -14,12 +14,23 @@ const initialState = {
     modalCardSong: {
         modalId: null,
         songName: '',
+        tasksId: [],
         songId: null
+    },
+    songTasks: {
+        songName: '',
+        tasks: [],
+        length: 0,
     }
 };
 
 function rootReducer(state = initialState, action) {
     switch (action.type) {
+        case TYPE.SET_SONG_TASKS:
+            return {
+                ...state,
+                songTasks: action.payload
+            }
         case TYPE.SET_SELECTED_COMPOSITOR_NAME:
             return {
                 ...state,

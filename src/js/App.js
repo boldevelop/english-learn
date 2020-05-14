@@ -6,9 +6,17 @@ import { Compositors } from './components/Compositors';
 import { Songs } from './components/Songs';
 import {View, Panel, PanelHeader, PanelHeaderBack, ModalRoot, ModalCard} from "@vkontakte/vkui";
 import Icon56MusicOutline from '@vkontakte/icons/dist/56/music_outline';
-import {initialLoad, setSelectedCompositorsSong, goBack, setSelectedTranslate, toggleModalCardSong} from "./actions";
+import {
+	initialLoad,
+	setSelectedCompositorsSong,
+	goBack,
+	setSelectedTranslate,
+	toggleModalCardSong,
+	goToPage, goToTasks
+} from "./actions";
 import ConfigProvider from "@vkontakte/vkui/dist/components/ConfigProvider/ConfigProvider";
 import {Translate} from "./components/Translate";
+import {Task} from "./components/Task";
 
 const App = () => {
 	const activePanel = useSelector(state => state.activePanel)
@@ -17,6 +25,7 @@ const App = () => {
 	const translate = useSelector(state => state.translate, shallowEqual)
 	const popout = useSelector(state => state.popout, shallowEqual)
 	const songs = useSelector(state => state.songs, shallowEqual)
+	const songTasks = useSelector(state => state.songTasks, shallowEqual)
 	const selectedCompositorName = useSelector(state => state.selectedCompositorName)
 	const activeModalData = useSelector(state => state.modalCardSong, shallowEqual)
 	const [scheme, SetScheme] = useState("bright_light")
@@ -40,9 +49,15 @@ const App = () => {
 		dispatch(toggleModalCardSong(ModalCardData))
 	}
 
+	const onClickNextButtonTask = (taskId) => {
+		const isLast = taskId === songTasks.length - 1;
+		dispatch(goToPage(isLast ? 'selected' : `task-${taskId}`)) // vmesto goto clear history to select
+	}
+
 	const closeModalData = {
 		modalId: null,
 		songName: '',
+		tasksId: [],
 		songId: null
 	}
 
@@ -72,7 +87,11 @@ const App = () => {
 							title: 'Упражнения',
 							mode: 'destructive',
 							action: () => {
-								console.log('tasks');
+								dispatch(toggleModalCardSong(closeModalData))
+								dispatch(goToTasks({
+									tasksId: activeModalData.tasksId,
+									songName: activeModalData.songName
+								}))
 							}
 						}
 					]
@@ -109,8 +128,55 @@ const App = () => {
 					<Songs songs={songs} onClick={onClickSong} />
 				</Panel>
 
-				<Panel id='task'>
-					task
+				{/* перенести в отдельный view */}
+				<Panel id='task-0'>
+					<Task
+						songName={songTasks.songName}
+						task={songTasks.tasks[0]}
+						last={3}
+						numberTask={0}
+						onClickNextButtonTask={onClickNextButtonTask}
+					/>
+				</Panel>
+
+				<Panel id='task-1'>
+					<Task
+						songName={songTasks.songName}
+						task={songTasks.tasks[1]}
+						last={3}
+						numberTask={1}
+						onClickNextButtonTask={onClickNextButtonTask}
+					/>
+				</Panel>
+
+				<Panel id='task-2'>
+					<Task
+						songName={songTasks.songName}
+						task={songTasks.tasks[2]}
+						last={3}
+						numberTask={2}
+						onClickNextButtonTask={onClickNextButtonTask}
+					/>
+				</Panel>
+
+				<Panel id='task-3'>
+					<Task
+						songName={songTasks.songName}
+						task={songTasks.tasks[3]}
+						last={3}
+						numberTask={3}
+						onClickNextButtonTask={onClickNextButtonTask}
+					/>
+				</Panel>
+
+				<Panel id='task-4'>
+					<Task
+						songName={songTasks.songName}
+						task={songTasks.tasks[4]}
+						last={3}
+						numberTask={4}
+						onClickNextButtonTask={onClickNextButtonTask}
+					/>
 				</Panel>
 
 				<Panel id="translate">
