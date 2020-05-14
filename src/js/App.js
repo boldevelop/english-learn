@@ -6,7 +6,7 @@ import { Compositors } from './components/Compositors';
 import { Songs } from './components/Songs';
 import {View, Panel, PanelHeader, PanelHeaderBack, ModalRoot, ModalCard} from "@vkontakte/vkui";
 import Icon56MusicOutline from '@vkontakte/icons/dist/56/music_outline';
-import {initialLoad, setSelectedCompositor, goBack, setSelectedTranslate, toggleModalCardSong} from "./actions";
+import {initialLoad, setSelectedCompositorsSong, goBack, setSelectedTranslate, toggleModalCardSong} from "./actions";
 import ConfigProvider from "@vkontakte/vkui/dist/components/ConfigProvider/ConfigProvider";
 import {Translate} from "./components/Translate";
 
@@ -33,7 +33,7 @@ const App = () => {
 	}, [dispatch]);
 
 	const onClickCompositors = (compositorData) => {
-		dispatch(setSelectedCompositor(compositorData))
+		dispatch(setSelectedCompositorsSong(compositorData))
 	}
 
 	const onClickSong = (ModalCardData) => {

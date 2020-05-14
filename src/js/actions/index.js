@@ -1,26 +1,17 @@
-import {
-    ACTIVE_PANEL,
-    INITIAL_LOAD,
-    SET_USER,
-    SET_POPOUT,
-    SET_COMPOSITORS,
-    SET_SELECTED_COMPOSITOR,
-    SET_SONGS, GO_BACK, GO_TO_PAGE, PUSH_HISTORY, POP_HISTORY, SET_SELECTED_TRANSLATE, SET_TRANSLATE,
-    TOGGLE_MODAL_CARD_SONG, SET_SELECTED_COMPOSITOR_NAME
-} from "../constants/actionTypes";
+import * as TYPE from "../constants/actionTypes";
 
-export const initialLoad = () => ({ type: INITIAL_LOAD });
-export const setUser = user => ({ type: SET_USER, payload: user });
-export const setCompositors = compositors => ({ type: SET_COMPOSITORS, payload: compositors });
-export const setSelectedCompositor = compositorData => ({ type: SET_SELECTED_COMPOSITOR, payload: compositorData }); // rename set Selected Songs
-export const setSelectedCompositorName = name => ({ type: SET_SELECTED_COMPOSITOR_NAME, payload: name });
-export const setSongs = songs => ({ type: SET_SONGS, payload: songs });
-export const setPopout = spinner => ({ type: SET_POPOUT, payload: spinner });
-export const setActivePanel = panel => ({ type: ACTIVE_PANEL, payload: panel });
-export const goBack = () => ({ type: GO_BACK });
-export const goToPage = name => ({ type: GO_TO_PAGE, payload: name });
-export const pushHistory = pageName => ({ type: PUSH_HISTORY, payload: pageName });
-export const popHistory = lastIndex => ({ type: POP_HISTORY, payload: lastIndex });
-export const setSelectedTranslate = songId => ({ type: SET_SELECTED_TRANSLATE, payload: songId });
-export const setTranslate = translate => ({ type: SET_TRANSLATE, payload: translate });
-export const toggleModalCardSong = cardSongData => ({ type: TOGGLE_MODAL_CARD_SONG, payload: cardSongData });
+export const initialLoad = () => ({ type: TYPE.INITIAL_LOAD });
+export const setUser = user => ({ type: TYPE.SET_USER, payload: user });
+export const setCompositors = compositors => ({ type: TYPE.SET_COMPOSITORS, payload: compositors });
+export const setSelectedCompositorsSong = compositorData => ({ type: TYPE.SET_SELECTED_COMPOSITORS_SONG, payload: compositorData }); // rename set Selected Songs
+export const setSelectedCompositorName = name => ({ type: TYPE.SET_SELECTED_COMPOSITOR_NAME, payload: name });
+export const setSongs = songs => ({ type: TYPE.SET_SONGS, payload: songs });
+export const setPopout = spinner => ({ type: TYPE.SET_POPOUT, payload: spinner });
+export const setActivePanel = panel => ({ type: TYPE.ACTIVE_PANEL, payload: panel });
+export const goBack = () => ({ type: TYPE.GO_BACK });
+export const goToPage = name => ({ type: TYPE.GO_TO_PAGE, payload: name });
+export const pushHistory = pageName => ({ type: TYPE.PUSH_HISTORY, payload: pageName });
+export const popHistory = lastIndex => ({ type: TYPE.POP_HISTORY, payload: lastIndex });
+export const setSelectedTranslate = songId => ({ type: TYPE.SET_SELECTED_TRANSLATE, payload: songId });
+export const setTranslate = translate => ({ type: TYPE.SET_TRANSLATE, payload: translate });
+export const toggleModalCardSong = cardSongData => ({ type: TYPE.TOGGLE_MODAL_CARD_SONG, payload: cardSongData });

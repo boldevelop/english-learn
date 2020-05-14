@@ -1,12 +1,6 @@
 import React from 'react';
 import { takeEvery, call, put, select } from "redux-saga/effects";
-import {
-  GO_BACK,
-  GO_TO_PAGE,
-  INITIAL_LOAD,
-  SET_SELECTED_COMPOSITOR,
-  SET_SELECTED_TRANSLATE
-} from "../constants/actionTypes";
+import * as TYPE from "../constants/actionTypes";
 import bridge from '@vkontakte/vk-bridge';
 import {
   setUser,
@@ -25,11 +19,11 @@ import songsData from "../../data/songs.json";
 import translatedData from "../../data/translates.json";
 
 export default function* watcherSaga() {
-  yield takeEvery(INITIAL_LOAD, initialSaga);
-  yield takeEvery(SET_SELECTED_COMPOSITOR, selectedCompositorSaga);
-  yield takeEvery(SET_SELECTED_TRANSLATE, selectedTranslateSaga);
-  yield takeEvery(GO_TO_PAGE, goToPageSaga);
-  yield takeEvery(GO_BACK, goBack);
+  yield takeEvery(TYPE.INITIAL_LOAD, initialSaga);
+  yield takeEvery(TYPE.SET_SELECTED_COMPOSITORS_SONG, selectedCompositorSaga);
+  yield takeEvery(TYPE.SET_SELECTED_TRANSLATE, selectedTranslateSaga);
+  yield takeEvery(TYPE.GO_TO_PAGE, goToPageSaga);
+  yield takeEvery(TYPE.GO_BACK, goBack);
 }
 
 function* goToPageSaga(action) {
