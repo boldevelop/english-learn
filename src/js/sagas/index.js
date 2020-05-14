@@ -11,7 +11,7 @@ import {
   pushHistory,
   popHistory,
   goToPage,
-  setTranslate, setSelectedCompositorName
+  setTranslate, setSelectedCompositorName, toggleModalCardSong
 } from "../actions";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import compositorsData from "../../data/compositors.json";
@@ -44,6 +44,7 @@ function* goBack() {
       yield call(bridge.send, 'VKWebAppClose', {"status": "success"}); // Отправляем bridge на закрытие сервиса.
     } else if (stateHistory.length > 1) { // Если в массиве больше одного значения:
       const lastIndex = stateHistory.length - 1;
+      yield put(toggleModalCardSong({ modalId: null, songName: '', songId: null}))
       yield put(popHistory(lastIndex)) // удаляем последний элемент в массиве.
       yield put(setActivePanel(stateHistory[lastIndex - 1]))// Меняем активную панель
     }
