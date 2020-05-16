@@ -1,7 +1,12 @@
 import React from 'react';
 import { Group, CardGrid, Card, Div, InfoRow, Progress, Title } from "@vkontakte/vkui";
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
+import {toggleModalCardSong} from "../actions";
 
-export const Songs = ({ onClick, songs }) => {
+export const Songs = () => {
+    const songs = useSelector(state => state.songs, shallowEqual)
+    const dispatch = useDispatch()
+
     return (
         <Group separator="hide">
             <CardGrid>
@@ -13,7 +18,7 @@ export const Songs = ({ onClick, songs }) => {
                         modalId: 'card-song'
                     }
                     return (
-                        <Card key={item.id} size="l" mode="shadow" onClick={() => onClick(modalCardData)} style={{ marginBottom: 16 }}>
+                        <Card key={item.id} size="l" mode="shadow" onClick={() => dispatch(toggleModalCardSong(modalCardData))} style={{ marginBottom: 16 }}>
                             <Div>
                                 <Title level="1" weight="semibold" style={{ marginBottom: 16 }}>{item.name}</Title>
                             </Div>

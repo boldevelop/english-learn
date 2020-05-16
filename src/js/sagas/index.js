@@ -1,6 +1,7 @@
 import React from 'react';
 import { takeEvery, call, put, select } from "redux-saga/effects";
 import * as TYPE from "../constants/actionTypes";
+import * as STORAGE_KEYS from "../constants/storageKeys";
 import bridge from '@vkontakte/vk-bridge';
 import {
   setUser,
@@ -11,7 +12,7 @@ import {
   pushHistory,
   popHistory,
   goToPage,
-  setTranslate, setSelectedCompositorName, toggleModalCardSong, setSongTasks
+  setTranslate, toggleModalCardSong, setSongTasks, setProgress, setSelectedCompositor, goBack
 } from "../actions";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import compositorsData from "../../data/compositors.json";
@@ -20,12 +21,42 @@ import translatedData from "../../data/translates.json";
 import tasksData from "../../data/tasks.json";
 
 export default function* watcherSaga() {
-  yield takeEvery(TYPE.INITIAL_LOAD, initialSaga);
-  yield takeEvery(TYPE.SET_SELECTED_COMPOSITORS_SONG, selectedCompositorSaga);
-  yield takeEvery(TYPE.SET_SELECTED_TRANSLATE, selectedTranslateSaga);
-  yield takeEvery(TYPE.GO_TO_PAGE, goToPageSaga);
-  yield takeEvery(TYPE.GO_BACK, goBackSaga);
-  yield takeEvery(TYPE.GO_TO_TASKS, goToTasksSaga);
+  yield takeEvery(TYPE.INITIAL_LOAD, initialSaga)
+  yield takeEvery(TYPE.INITIAL_COMPLETE, getProgressSaga)
+  yield takeEvery(TYPE.FORM_PROGRESS, formProgressSaga)
+  yield takeEvery(TYPE.SET_SELECTED_COMPOSITORS_SONG, selectedCompositorSaga)
+  yield takeEvery(TYPE.SET_SELECTED_TRANSLATE, selectedTranslateSaga)
+  yield takeEvery(TYPE.GO_TO_PAGE, goToPageSaga)
+  yield takeEvery(TYPE.GO_BACK, goBackSaga)
+  yield takeEvery(TYPE.GO_TO_TASKS, goToTasksSaga)
+  yield takeEvery(TYPE.END_TASKS, endTasksSaga)
+  yield takeEvery(TYPE.GO_TO_NEXT_TASK, goToNextTaskSaga)
+}
+
+function* formProgressSaga() {
+  try {
+    const compositors = yield select(state => state.compositors)
+    const progress = createProgressArray(compositors)
+    yield put(setProgress(progress))
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+function* goToNextTaskSaga(action) {
+  try {
+    yield put(setActivePanel(action.payload))
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+function* endTasksSaga() {
+  try {
+    yield put(goBack())
+  } catch(e) {
+    console.log(e)
+  }
 }
 
 function* goToPageSaga(action) {
@@ -41,12 +72,11 @@ function* goToPageSaga(action) {
 
 function* goToTasksSaga(action) {
   try {
-    const tasksId = action.payload.tasksId // В качестве аргумента принимаем id панели для перехода
+    const tasksId = action.payload.tasksId // В качестве аргумента принимаем id заданий
     const songName = action.payload.songName
     yield put(setPopout(<ScreenSpinner size='large' />));
     const tasks = yield call(loadTasks, tasksId)
-    yield put(setSongTasks({tasks, length: tasks.length, songName}))
-    console.log(tasks)
+    yield put(setSongTasks({tasks, songName}))
   } catch(e) {
     console.log(e)
   } finally {
@@ -73,16 +103,32 @@ function* goBackSaga() {
 
 function* initialSaga() {
   try {
-    yield put(setPopout(<ScreenSpinner size='large' />));
-    yield call(bridge.send, 'VKWebAppInit');
-    const payload = yield call(bridge.send, 'VKWebAppGetUserInfo');
-    yield put(setUser(payload));
-    const compositors = yield call(loadCompositors);
-    yield put(setCompositors(compositors));
+    yield put(setPopout(<ScreenSpinner size='large' />))
+    yield call(bridge.send, 'VKWebAppInit')
+    const payload = yield call(bridge.send, 'VKWebAppGetUserInfo')
+    yield put(setUser(payload))
+    console.log('loadcompositors start')
+    yield call(loadCompositorsSaga)
+    console.log('loadcompositors end')
   } catch (e) {
-      console.log(e);
+      console.log(e)
   } finally {
-    yield put(setPopout(null));
+    yield put(setPopout(null))
+    yield put({type: 'INITIAL_COMPLETE'})
+  }
+}
+
+function* getProgressSaga() {
+  try {
+    console.log('start getProgress')
+    yield call(
+        bridge.send,
+        'VKWebAppStorageGet',
+        {
+          keys: [STORAGE_KEYS.PROGRESS]
+        })
+  } catch(e) {
+    console.log(e)
   }
 }
 
@@ -91,7 +137,7 @@ function* selectedCompositorSaga(action) {
     yield put(goToPage('selected'));
     yield put(setPopout(<ScreenSpinner size='large' />));
     const songs = yield call(loadSongs, action.payload.songId);
-    yield put(setSelectedCompositorName(action.payload.name));
+    yield put(setSelectedCompositor(action.payload));
     yield put(setSongs(songs));
   } catch (e) {
     console.log(e);
@@ -111,6 +157,11 @@ function* selectedTranslateSaga(action) {
   } finally {
     yield put(setPopout(null));
   }
+}
+
+function* loadCompositorsSaga() {
+  const compositors = yield call(loadCompositors)
+  yield put(setCompositors(compositors))
 }
 
 function loadCompositors() {
@@ -134,14 +185,24 @@ function loadTranslate(translatedId) {
 }
 
 function loadTasks(tasksId) {
-  let tasks = [];
+  let tasks = []
   for (const id of tasksId) {
     tasksData.forEach(currentTask => {
       if (currentTask.id === id) {
-        tasks.push(currentTask);
+        tasks.push(currentTask)
       }
     })
   }
   return Promise.resolve(tasks)
 }
 
+function createProgressArray(compositors) {
+  const progress = []
+  compositors.forEach((comp) => {
+    progress.push({
+      compId: comp.id,
+      completeTaskIds: []
+    })
+  })
+  return progress
+}

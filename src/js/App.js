@@ -8,51 +8,69 @@ import {View, Panel, PanelHeader, PanelHeaderBack, ModalRoot, ModalCard} from "@
 import Icon56MusicOutline from '@vkontakte/icons/dist/56/music_outline';
 import {
 	initialLoad,
-	setSelectedCompositorsSong,
 	goBack,
 	setSelectedTranslate,
 	toggleModalCardSong,
-	goToPage, goToTasks
+	goToTasks, setProgress, formProgress
 } from "./actions";
 import ConfigProvider from "@vkontakte/vkui/dist/components/ConfigProvider/ConfigProvider";
 import {Translate} from "./components/Translate";
 import {Task} from "./components/Task";
+import * as STORAGE_KEYS from "./constants/storageKeys";
 
 const App = () => {
 	const activePanel = useSelector(state => state.activePanel)
-	const compositors = useSelector(state => state.compositors)
 	const stateHistory = useSelector(state => state.history, shallowEqual)
 	const translate = useSelector(state => state.translate, shallowEqual)
 	const popout = useSelector(state => state.popout, shallowEqual)
-	const songs = useSelector(state => state.songs, shallowEqual)
-	const songTasks = useSelector(state => state.songTasks, shallowEqual)
-	const selectedCompositorName = useSelector(state => state.selectedCompositorName)
+	const selectedCompositor = useSelector(state => state.selectedCompositor, shallowEqual)
 	const activeModalData = useSelector(state => state.modalCardSong, shallowEqual)
-	const [scheme, SetScheme] = useState("bright_light")
+	const [scheme, setScheme] = useState("bright_light")
 	const dispatch = useDispatch()
+
+	const storageResponseHandler = (fetchedStorage) => {
+		if (Array.isArray(fetchedStorage.keys)) {
+			const data = {}
+			fetchedStorage.keys.forEach(({key, value}) => {
+				try {
+					data[key] = value !== undefined ? JSON.parse(value) : {}
+					switch (key) {
+						case STORAGE_KEYS.PROGRESS:
+							if (!data[key]) {
+								dispatch(formProgress())
+							} else {
+								dispatch(setProgress(data[STORAGE_KEYS.PROGRESS]))
+							}
+							break;
+						default:
+							break;
+					}
+				} catch (e) {
+					console.log(e);
+				}
+			})
+		}
+		console.log(fetchedStorage)
+	}
 
 	useEffect(() => {
 		bridge.subscribe(({ detail: { type, data } }) => {
-			if (type === 'VKWebAppUpdateConfig') {
-				SetScheme(data.scheme)
+			switch (type) {
+				case 'VKWebAppUpdateConfig':
+					setScheme(data.scheme)
+					break
+				case 'VKWebAppStorageGetResult':
+					storageResponseHandler(data)
+					break
+				default:
+					break
 			}
-		});
-		window.addEventListener('popstate', () => dispatch(goBack()));
-		dispatch(initialLoad());
+		})
+		window.addEventListener('popstate', () => {
+			dispatch(goBack())
+		})
+		dispatch(initialLoad())
 	}, [dispatch]);
-
-	const onClickCompositors = (compositorData) => {
-		dispatch(setSelectedCompositorsSong(compositorData))
-	}
-
-	const onClickSong = (ModalCardData) => {
-		dispatch(toggleModalCardSong(ModalCardData))
-	}
-
-	const onClickNextButtonTask = (taskId) => {
-		const isLast = taskId === songTasks.length - 1;
-		dispatch(goToPage(isLast ? 'selected' : `task-${taskId}`)) // vmesto goto clear history to select
-	}
 
 	const closeModalData = {
 		modalId: null,
@@ -72,7 +90,7 @@ const App = () => {
 				icon={<Icon56MusicOutline />}
 				actionsLayout="vertical"
 				header={activeModalData.songName}
-				caption={selectedCompositorName}
+				caption={selectedCompositor.name}
 				actions={
 					[
 						{
@@ -100,6 +118,8 @@ const App = () => {
 		</ModalRoot>
 	)
 
+	console.log(stateHistory)
+
 	return (
 		<ConfigProvider isWebView={true} scheme={scheme}>
 			<View id="compositors"
@@ -111,79 +131,42 @@ const App = () => {
 			>
 				<Panel id='all'>
 					<PanelHeader>Композиторы</PanelHeader>
-					{!!compositors.length && <Compositors
-						onClick={onClickCompositors}
-						compositors={compositors}
-					/>}
+					<Compositors />
 				</Panel>
 
 				<Panel id='selected'>
 					<PanelHeader
-						left={
-							<PanelHeaderBack onClick={() => window.history.back()} />
-						}
+						left={<PanelHeaderBack onClick={() => window.history.back()} />}
 					>
 						Композиции
 					</PanelHeader>
-					<Songs songs={songs} onClick={onClickSong} />
+					<Songs />
 				</Panel>
 
 				{/* перенести в отдельный view */}
 				<Panel id='task-0'>
-					<Task
-						songName={songTasks.songName}
-						task={songTasks.tasks[0]}
-						last={3}
-						numberTask={0}
-						onClickNextButtonTask={onClickNextButtonTask}
-					/>
+					<Task numberTask={0}/>
 				</Panel>
 
 				<Panel id='task-1'>
-					<Task
-						songName={songTasks.songName}
-						task={songTasks.tasks[1]}
-						last={3}
-						numberTask={1}
-						onClickNextButtonTask={onClickNextButtonTask}
-					/>
+					<Task numberTask={1}/>
 				</Panel>
 
 				<Panel id='task-2'>
-					<Task
-						songName={songTasks.songName}
-						task={songTasks.tasks[2]}
-						last={3}
-						numberTask={2}
-						onClickNextButtonTask={onClickNextButtonTask}
-					/>
+					<Task numberTask={2}/>
 				</Panel>
 
 				<Panel id='task-3'>
-					<Task
-						songName={songTasks.songName}
-						task={songTasks.tasks[3]}
-						last={3}
-						numberTask={3}
-						onClickNextButtonTask={onClickNextButtonTask}
-					/>
+					<Task numberTask={3}/>
 				</Panel>
 
 				<Panel id='task-4'>
-					<Task
-						songName={songTasks.songName}
-						task={songTasks.tasks[4]}
-						last={3}
-						numberTask={4}
-						onClickNextButtonTask={onClickNextButtonTask}
-					/>
+					<Task numberTask={4}/>
 				</Panel>
 
 				<Panel id="translate">
 					<PanelHeader
-						left={
-							<PanelHeaderBack onClick={() => window.history.back()} />
-						}
+						left={<PanelHeaderBack onClick={() => window.history.back()} />}
 					>
 						Перевод
 					</PanelHeader>

@@ -1,32 +1,81 @@
 import React, {useState} from 'react';
-import {Group, CardGrid, Title, Separator, PanelHeader} from "@vkontakte/vkui";
+import {Group, Div, CardGrid, Card, Title, FixedLayout, PanelHeader } from "@vkontakte/vkui";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
+import {endTasks, goToNextTask} from "../actions";
 
-export const Task = ({ task, numberTask, last, onClickNextButtonTask, songName }) => {
-
+export const Task = ({ numberTask }) => {
+    const songTasks = useSelector(state => state.songTasks, shallowEqual)
     const [isShowNextButton, setStateNextButton] = useState(false)
+    const [userAnswerNumber, setUserAnswerNumber] = useState(-1)
+    const dispatch = useDispatch()
 
-    const onClickAnswer = (id) => {
+    const task = songTasks.tasks[0]
+    const songName = songTasks.songName
+
+    const onClickNextButtonTask = () => {
+        const nextNumberTask = numberTask + 1
+        const isLast = nextNumberTask === songTasks.tasks.length
+        dispatch(isLast ? endTasks() : goToNextTask(`task-${nextNumberTask}`))
+    }
+
+    const onClickAnswer = (buttonId) => {
+        if (isShowNextButton) {
+            return;
+        }
+        setUserAnswerNumber(buttonId);
         setStateNextButton(true)
     }
 
-    const onClickNextButton = () => {
-        onClickNextButtonTask(numberTask + 1)
+    const setColorForButton = (answerId, userAnswerId) => {
+        if (userAnswerNumber === -1) {
+            return "var(--action_sheet_action_foreground)" // начальное состояние всех кнопок
+        }
+        if (answerId === userAnswerId) {
+            if (userAnswerId === task.correct) {
+                return "var(--field_valid_border)" // правильный вариант
+            } else {
+                return "var(--dynamic_red)" // неправильный вариант
+            }
+        }
+        return "var(--background_highlighted)" // остальные
     }
 
     return (
         <>
             <PanelHeader>{songName}</PanelHeader>
-            <Group separator="hide">
-                <Title level="3" weight="medium" style={{ marginBottom: 16 }}>{task.question}</Title>
-                <Separator />
-                <CardGrid>
+            <CardGrid>
+                <Card size="l" style={{ marginTop: '3rem' }}>
+                    <Div>
+                        <Title level="2" weight="semibold" style={{ marginBottom: 16 }}>{task.question}</Title>
+                    </Div>
+                </Card>
+            </CardGrid>
+            <Div>
+                <Group>
                     {task.answers.map((answer, i) => (
-                        <Button mode="overlay_outline" key={i} onClick={() => onClickAnswer(answer.id)}>{answer.text}</Button>
+                        <Div key={i}>
+                            <Button
+                                mode={"tertiary"}
+                                onClick={() => onClickAnswer(answer.id)}
+                                stretched
+                                size='l'
+                                style={{ color: setColorForButton(answer.id, userAnswerNumber) }}
+                            >
+                                {answer.text}
+                            </Button>
+                        </Div>
                     ))}
-                </CardGrid>
-                {isShowNextButton && <Button size="xl" mode="secondary" onClick={onClickNextButton}>Next</Button>}
-            </Group>
+                </Group>
+            </Div>
+
+            {isShowNextButton &&
+                <FixedLayout vertical="bottom">
+                    <Div>
+                        <Button size="xl" mode="secondary" onClick={onClickNextButtonTask}>Next</Button>
+                    </Div>
+                </FixedLayout>
+            }
         </>
     )
 }

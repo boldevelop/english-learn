@@ -6,6 +6,7 @@ const initialState = {
     history: ['all'],
     activePanel: 'all',
     selectedCompositorName: '',
+    selectedCompositor: {},
     user: null,
     popout: <ScreenSpinner size='large' />,
     compositors: [],
@@ -19,22 +20,27 @@ const initialState = {
     },
     songTasks: {
         songName: '',
-        tasks: [],
-        length: 0,
-    }
+        tasks: []
+    },
+    progress: []
 };
 
 function rootReducer(state = initialState, action) {
     switch (action.type) {
+        case TYPE.SET_SELECTED_COMPOSITOR:
+            return {
+                ...state,
+                selectedCompositor: action.payload
+            }
+        case TYPE.SET_PROGRESS:
+            return {
+                ...state,
+                progress: action.payload
+            }
         case TYPE.SET_SONG_TASKS:
             return {
                 ...state,
                 songTasks: action.payload
-            }
-        case TYPE.SET_SELECTED_COMPOSITOR_NAME:
-            return {
-                ...state,
-                selectedCompositorName: action.payload
             }
         case TYPE.TOGGLE_MODAL_CARD_SONG:
             return {
@@ -44,7 +50,7 @@ function rootReducer(state = initialState, action) {
         case TYPE.POP_HISTORY:
             return {
                 ...state,
-                history: state.history.filter((item, i) => i !== action.payload)
+                history: state.history.filter((item, i) => i < action.payload)
             }
         case TYPE.PUSH_HISTORY:
             return {
