@@ -5,28 +5,41 @@ import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenS
 const initialState = {
     history: ['all'],
     activePanel: 'all',
-    selectedCompositorName: '',
+
     selectedCompositor: {},
+    selectedSong: {},
+    selectedTask: [],
+
     user: null,
     popout: <ScreenSpinner size='large' />,
+
     compositors: [],
     songs: [],
     translate: null,
-    modalCardSong: {
-        modalId: null,
-        songName: '',
-        tasksId: [],
-        songId: null
-    },
-    songTasks: {
-        songName: '',
-        tasks: []
-    },
+
+    modalCardSong: null,
+    /*
+    {
+      compId: comp.id,
+      completeTaskIds: [],
+      songs: [
+        {
+            id: []
+            completeTaskIds: []
+        }
+      ]
+    }
+     */
     progress: []
 };
 
 function rootReducer(state = initialState, action) {
     switch (action.type) {
+        case TYPE.SET_SELECTED_SONG:
+            return {
+                ...state,
+                selectedSong: action.payload
+            }
         case TYPE.SET_SELECTED_COMPOSITOR:
             return {
                 ...state,
@@ -40,7 +53,7 @@ function rootReducer(state = initialState, action) {
         case TYPE.SET_SONG_TASKS:
             return {
                 ...state,
-                songTasks: action.payload
+                selectedTask: action.payload
             }
         case TYPE.TOGGLE_MODAL_CARD_SONG:
             return {

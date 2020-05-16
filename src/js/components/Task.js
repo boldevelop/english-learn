@@ -5,17 +5,18 @@ import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {endTasks, goToNextTask} from "../actions";
 
 export const Task = ({ numberTask }) => {
-    const songTasks = useSelector(state => state.songTasks, shallowEqual)
+    const selectedTask = useSelector(state => state.selectedTask, shallowEqual)
+    const selectedSong = useSelector(state => state.selectedSong, shallowEqual)
     const [isShowNextButton, setStateNextButton] = useState(false)
     const [userAnswerNumber, setUserAnswerNumber] = useState(-1)
     const dispatch = useDispatch()
 
-    const task = songTasks.tasks[0]
-    const songName = songTasks.songName
+    const task = selectedTask[numberTask]
+    const songName = selectedSong.name
 
     const onClickNextButtonTask = () => {
         const nextNumberTask = numberTask + 1
-        const isLast = nextNumberTask === songTasks.tasks.length
+        const isLast = nextNumberTask === selectedTask.length
         dispatch(isLast ? endTasks() : goToNextTask(`task-${nextNumberTask}`))
     }
 

@@ -1,8 +1,11 @@
 import React from 'react';
 import { Group, CardGrid, Card, Text, Title, Div, Separator } from "@vkontakte/vkui";
+import {shallowEqual, useSelector} from "react-redux";
 
-export const Translate = ({ translate }) => {
-    return (
+export const Translate = () => {
+    const translate = useSelector(state => state.translate, shallowEqual)
+
+    return translate && (
         <Group separator="hide">
             <CardGrid>
                 {!!translate.text.length && translate.text.map( item =>

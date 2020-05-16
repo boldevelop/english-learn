@@ -21,9 +21,9 @@ import * as STORAGE_KEYS from "./constants/storageKeys";
 const App = () => {
 	const activePanel = useSelector(state => state.activePanel)
 	const stateHistory = useSelector(state => state.history, shallowEqual)
-	const translate = useSelector(state => state.translate, shallowEqual)
 	const popout = useSelector(state => state.popout, shallowEqual)
-	const selectedCompositor = useSelector(state => state.selectedCompositor, shallowEqual)
+	const selectedCompositorName = useSelector(state => state.selectedCompositor.name)
+	const selectedSongName = useSelector(state => state.selectedSong.name)
 	const activeModalData = useSelector(state => state.modalCardSong, shallowEqual)
 	const [scheme, setScheme] = useState("bright_light")
 	const dispatch = useDispatch()
@@ -72,44 +72,34 @@ const App = () => {
 		dispatch(initialLoad())
 	}, [dispatch]);
 
-	const closeModalData = {
-		modalId: null,
-		songName: '',
-		tasksId: [],
-		songId: null
-	}
-
 	const modal = (
 		<ModalRoot
-			activeModal={activeModalData.modalId}
-			onClose={() => dispatch(toggleModalCardSong(closeModalData))}
+			activeModal={activeModalData}
+			onClose={() => dispatch(toggleModalCardSong(null))}
 		>
 			<ModalCard
 				id='card-song'
-				onClose={() => dispatch(toggleModalCardSong(closeModalData))}
+				onClose={() => dispatch(toggleModalCardSong(null))}
 				icon={<Icon56MusicOutline />}
 				actionsLayout="vertical"
-				header={activeModalData.songName}
-				caption={selectedCompositor.name}
+				header={selectedSongName}
+				caption={selectedCompositorName}
 				actions={
 					[
 						{
 							title: 'Перевод',
 							mode: 'commerce',
 							action: () => {
-								dispatch(toggleModalCardSong(closeModalData))
-								dispatch(setSelectedTranslate(activeModalData.songId))
+								dispatch(toggleModalCardSong(null))
+								dispatch(setSelectedTranslate())
 							}
 						},
 						{
 							title: 'Упражнения',
 							mode: 'destructive',
 							action: () => {
-								dispatch(toggleModalCardSong(closeModalData))
-								dispatch(goToTasks({
-									tasksId: activeModalData.tasksId,
-									songName: activeModalData.songName
-								}))
+								dispatch(toggleModalCardSong(null))
+								dispatch(goToTasks())
 							}
 						}
 					]
@@ -117,8 +107,6 @@ const App = () => {
 			/>
 		</ModalRoot>
 	)
-
-	console.log(stateHistory)
 
 	return (
 		<ConfigProvider isWebView={true} scheme={scheme}>
@@ -170,7 +158,7 @@ const App = () => {
 					>
 						Перевод
 					</PanelHeader>
-					{translate && <Translate translate={translate}/>}
+					<Translate />
 				</Panel>
 
 			</View>

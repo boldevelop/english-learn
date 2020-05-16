@@ -70,13 +70,13 @@ function* goToPageSaga(action) {
   }
 }
 
-function* goToTasksSaga(action) {
+function* goToTasksSaga() {
   try {
-    const tasksId = action.payload.tasksId // В качестве аргумента принимаем id заданий
-    const songName = action.payload.songName
+    const selectedSong = yield select(state => state.selectedSong)
+    console.log(selectedSong)
     yield put(setPopout(<ScreenSpinner size='large' />));
-    const tasks = yield call(loadTasks, tasksId)
-    yield put(setSongTasks({tasks, songName}))
+    const tasks = yield call(loadTasks, selectedSong.tasksId)
+    yield put(setSongTasks(tasks))
   } catch(e) {
     console.log(e)
   } finally {
@@ -146,11 +146,12 @@ function* selectedCompositorSaga(action) {
   }
 }
 
-function* selectedTranslateSaga(action) {
+function* selectedTranslateSaga() {
   try {
+    const selectedSong = yield select(state => state.selectedSong)
     yield put(goToPage('translate'));
     yield put(setPopout(<ScreenSpinner size='large' />));
-    const translate = yield call(loadTranslate, action.payload);
+    const translate = yield call(loadTranslate, selectedSong.translateId);
     yield put(setTranslate(translate));
   } catch (e) {
     console.log(e);
@@ -199,9 +200,17 @@ function loadTasks(tasksId) {
 function createProgressArray(compositors) {
   const progress = []
   compositors.forEach((comp) => {
+    const songs = []
+    comp.songId.forEach(id => {
+      songs.push({
+        songId: id,
+        completeTasksIds: []
+      })
+    })
     progress.push({
       compId: comp.id,
-      completeTaskIds: []
+      completeTaskIds: [],
+      songs: songs
     })
   })
   return progress
