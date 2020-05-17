@@ -72,8 +72,8 @@ function* setCompletedTaskSaga() {
     const compositorId = yield select(state => state.selectedCompositor.id)
     const songId = yield select(state => state.selectedSong.id)
     const progress = yield select(state => state.progress)
-    const newProgress = addCompletedIdsToProgress(progress, compositorId, songId, completedTasks)
-    yield put(setProgress(newProgress))
+    yield call(addCompletedIdsToProgress, progress, compositorId, songId, completedTasks)
+    yield put(setProgress(progress))
     yield put(clearCompletedTask())
   } catch (e) {
 
@@ -235,7 +235,9 @@ function createProgressArray(compositors) {
   return progress
 }
 
-function addCompletedIdsToProgress(progress, compId, songId, complIds) {
+async function addCompletedIdsToProgress(progress, compId, songId, complIds) {
+  const addedIds = [];
+
   progress.forEach(progressComp => {
 
     if (progressComp.compId === compId) {
@@ -243,7 +245,6 @@ function addCompletedIdsToProgress(progress, compId, songId, complIds) {
       // а в progressComp хранятся все эти айдишники
       // progressComp.completeTasksIds = progressComp.completeTasksIds.concat(complIds)
 
-      const addedIds = [];
       progressComp.songs.forEach(progressSong => {
         if (progressSong.songId === songId) {
           // локанично но мне нужно узнать какие айдишники добавил,
@@ -268,5 +269,11 @@ function addCompletedIdsToProgress(progress, compId, songId, complIds) {
       progressComp.completeTasksIds = progressComp.completeTasksIds.concat(addedIds)
     }
   })
-  return progress
+
+  if (addedIds.length) {
+    // await bridge.send('VKWebAppStorageSet', {
+    //   key: STORAGE_KEYS.PROGRESS,
+    //   value: JSON.stringify(progress),
+    // });
+  }
 }

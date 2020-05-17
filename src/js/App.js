@@ -62,6 +62,12 @@ const App = () => {
 				case 'VKWebAppStorageGetResult':
 					storageResponseHandler(data)
 					break
+				case 'VKWebAppShowStoryBoxResult':
+					console.log('data', data)
+					break
+				case 'VKWebAppShowStoryBoxFailed':
+					console.log('data', data)
+					break
 				default:
 					break
 			}
