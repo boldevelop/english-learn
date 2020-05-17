@@ -107,9 +107,7 @@ function* initialSaga() {
     yield call(bridge.send, 'VKWebAppInit')
     const payload = yield call(bridge.send, 'VKWebAppGetUserInfo')
     yield put(setUser(payload))
-    console.log('loadcompositors start')
     yield call(loadCompositorsSaga)
-    console.log('loadcompositors end')
   } catch (e) {
       console.log(e)
   } finally {
@@ -120,7 +118,6 @@ function* initialSaga() {
 
 function* getProgressSaga() {
   try {
-    console.log('start getProgress')
     yield call(
         bridge.send,
         'VKWebAppStorageGet',
@@ -134,15 +131,16 @@ function* getProgressSaga() {
 
 function* selectedCompositorSaga(action) {
   try {
-    yield put(goToPage('selected'));
-    yield put(setPopout(<ScreenSpinner size='large' />));
-    const songs = yield call(loadSongs, action.payload.songId);
-    yield put(setSelectedCompositor(action.payload));
-    yield put(setSongs(songs));
+    yield put(goToPage('selected'))
+    yield put(setSongs([])) // clear its need it or component will be get progress from old-prev songs
+    yield put(setPopout(<ScreenSpinner size='large' />))
+    const songs = yield call(loadSongs, action.payload.songId)
+    yield put(setSelectedCompositor(action.payload))
+    yield put(setSongs(songs))
   } catch (e) {
-    console.log(e);
+    console.log(e)
   } finally {
-    yield put(setPopout(null));
+    yield put(setPopout(null))
   }
 }
 
@@ -209,7 +207,7 @@ function createProgressArray(compositors) {
     })
     progress.push({
       compId: comp.id,
-      completeTaskIds: [],
+      completeTasksIds: [],
       songs: songs
     })
   })

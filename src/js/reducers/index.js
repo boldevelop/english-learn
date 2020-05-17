@@ -21,11 +21,11 @@ const initialState = {
     /*
     {
       compId: comp.id,
-      completeTaskIds: [],
+      completeTasksIds: [],
       songs: [
         {
-            id: []
-            completeTaskIds: []
+            songId: []
+            completeTasksIds: []
         }
       ]
     }
