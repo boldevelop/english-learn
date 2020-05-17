@@ -17,24 +17,35 @@ const initialState = {
     songs: [],
     translate: null,
 
-    modalCardSong: null,
+    modalCard: null,
     /*
     {
       compId: comp.id,
       completeTasksIds: [],
       songs: [
         {
-            songId: []
+            songId: song.id
             completeTasksIds: []
         }
       ]
     }
      */
-    progress: []
+    progress: [],
+    currentCompletedTasks: [],
 };
 
 function rootReducer(state = initialState, action) {
     switch (action.type) {
+        case TYPE.CLEAR_COMPLETED_TASK:
+            return {
+                ...state,
+                currentCompletedTasks: []
+            }
+        case TYPE.PUSH_COMPLETED_TASK:
+            return {
+                ...state,
+                currentCompletedTasks: state.currentCompletedTasks.concat([action.payload])
+            }
         case TYPE.SET_SELECTED_SONG:
             return {
                 ...state,
@@ -55,10 +66,10 @@ function rootReducer(state = initialState, action) {
                 ...state,
                 selectedTask: action.payload
             }
-        case TYPE.TOGGLE_MODAL_CARD_SONG:
+        case TYPE.TOGGLE_MODAL_CARD:
             return {
                 ...state,
-                modalCardSong: action.payload
+                modalCard: action.payload
             }
         case TYPE.POP_HISTORY:
             return {

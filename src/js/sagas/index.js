@@ -12,7 +12,13 @@ import {
   pushHistory,
   popHistory,
   goToPage,
-  setTranslate, toggleModalCardSong, setSongTasks, setProgress, setSelectedCompositor, goBack
+  setTranslate,
+  toggleModalCard,
+  setSongTasks,
+  setProgress,
+  setSelectedCompositor,
+  goBack,
+  clearCompletedTask
 } from "../actions";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import compositorsData from "../../data/compositors.json";
@@ -53,9 +59,24 @@ function* goToNextTaskSaga(action) {
 
 function* endTasksSaga() {
   try {
+    yield call(setCompletedTaskSaga)
     yield put(goBack())
   } catch(e) {
     console.log(e)
+  }
+}
+
+function* setCompletedTaskSaga() {
+  try {
+    const completedTasks = yield select(state => state.currentCompletedTasks)
+    const compositorId = yield select(state => state.selectedCompositor.id)
+    const songId = yield select(state => state.selectedSong.id)
+    const progress = yield select(state => state.progress)
+    const newProgress = addCompletedIdsToProgress(progress, compositorId, songId, completedTasks)
+    yield put(setProgress(newProgress))
+    yield put(clearCompletedTask())
+  } catch (e) {
+
   }
 }
 
@@ -92,7 +113,7 @@ function* goBackSaga() {
       yield call(bridge.send, 'VKWebAppClose', {"status": "success"}); // Отправляем bridge на закрытие сервиса.
     } else if (stateHistory.length > 1) { // Если в массиве больше одного значения:
       const lastIndex = stateHistory.length - 1;
-      yield put(toggleModalCardSong({ modalId: null, songName: '', songId: null}))
+      yield put(toggleModalCard(null))
       yield put(popHistory(lastIndex)) // удаляем последний элемент в массиве.
       yield put(setActivePanel(stateHistory[lastIndex - 1]))// Меняем активную панель
     }
@@ -210,6 +231,42 @@ function createProgressArray(compositors) {
       completeTasksIds: [],
       songs: songs
     })
+  })
+  return progress
+}
+
+function addCompletedIdsToProgress(progress, compId, songId, complIds) {
+  progress.forEach(progressComp => {
+
+    if (progressComp.compId === compId) {
+      // для дев разработки использую 4 таска с одиними и теми же айдишниками
+      // а в progressComp хранятся все эти айдишники
+      // progressComp.completeTasksIds = progressComp.completeTasksIds.concat(complIds)
+
+      const addedIds = [];
+      progressComp.songs.forEach(progressSong => {
+        if (progressSong.songId === songId) {
+          // локанично но мне нужно узнать какие айдишники добавил,
+          // для дев разработки использую 4 таска с одиними и теми же айдишниками
+          // а в progressComp хранятся все эти айдишники
+          // progressSong.completeTasksIds = [ ...new Set([...progressSong.completeTasksIds,...complIds])]
+
+          progressSong.completeTasksIds = progressSong.completeTasksIds.concat(
+              complIds.filter( complId => {
+                if (progressSong.completeTasksIds.indexOf(complId) === -1) {
+                  //  айдишника нет
+                  addedIds.push(complId)
+                  return true;
+                } else {
+                  //  айдишник повторяется
+                  return false;
+                }
+              })
+          )
+        }
+      })
+      progressComp.completeTasksIds = progressComp.completeTasksIds.concat(addedIds)
+    }
   })
   return progress
 }

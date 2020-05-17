@@ -1,7 +1,7 @@
 import React from 'react';
 import { Group, CardGrid, Card, Div, InfoRow, Progress, Title } from "@vkontakte/vkui";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
-import {setSelectedSong, toggleModalCardSong} from "../actions";
+import {setSelectedSong, toggleModalCard} from "../actions";
 import {getCompleteTasksOfSong} from "../helpers";
 
 export const Songs = () => {
@@ -12,7 +12,7 @@ export const Songs = () => {
 
     const onClickCard = (songData) => {
         dispatch(setSelectedSong(songData))
-        dispatch(toggleModalCardSong('card-song'))
+        dispatch(toggleModalCard('card-song'))
     }
 
     return (

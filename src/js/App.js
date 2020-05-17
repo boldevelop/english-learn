@@ -10,7 +10,7 @@ import {
 	initialLoad,
 	goBack,
 	setSelectedTranslate,
-	toggleModalCardSong,
+	toggleModalCard,
 	goToTasks, setProgress, formProgress
 } from "./actions";
 import ConfigProvider from "@vkontakte/vkui/dist/components/ConfigProvider/ConfigProvider";
@@ -24,7 +24,7 @@ const App = () => {
 	const popout = useSelector(state => state.popout, shallowEqual)
 	const selectedCompositorName = useSelector(state => state.selectedCompositor.name)
 	const selectedSongName = useSelector(state => state.selectedSong.name)
-	const activeModalData = useSelector(state => state.modalCardSong, shallowEqual)
+	const activeModalData = useSelector(state => state.modalCard)
 	const [scheme, setScheme] = useState("bright_light")
 	const dispatch = useDispatch()
 
@@ -75,11 +75,11 @@ const App = () => {
 	const modal = (
 		<ModalRoot
 			activeModal={activeModalData}
-			onClose={() => dispatch(toggleModalCardSong(null))}
+			onClose={() => dispatch(toggleModalCard(null))}
 		>
 			<ModalCard
 				id='card-song'
-				onClose={() => dispatch(toggleModalCardSong(null))}
+				onClose={() => dispatch(toggleModalCard(null))}
 				icon={<Icon56MusicOutline />}
 				actionsLayout="vertical"
 				header={selectedSongName}
@@ -90,7 +90,7 @@ const App = () => {
 							title: 'Перевод',
 							mode: 'commerce',
 							action: () => {
-								dispatch(toggleModalCardSong(null))
+								dispatch(toggleModalCard(null))
 								dispatch(setSelectedTranslate())
 							}
 						},
@@ -98,7 +98,7 @@ const App = () => {
 							title: 'Упражнения',
 							mode: 'destructive',
 							action: () => {
-								dispatch(toggleModalCardSong(null))
+								dispatch(toggleModalCard(null))
 								dispatch(goToTasks())
 							}
 						}

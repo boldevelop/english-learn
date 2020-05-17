@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Group, Div, CardGrid, Card, Title, FixedLayout, PanelHeader } from "@vkontakte/vkui";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
-import {endTasks, goToNextTask} from "../actions";
+import {endTasks, goToNextTask, pushCompletedTask} from "../actions";
 
 export const Task = ({ numberTask }) => {
     const selectedTask = useSelector(state => state.selectedTask, shallowEqual)
@@ -17,6 +17,11 @@ export const Task = ({ numberTask }) => {
     const onClickNextButtonTask = () => {
         const nextNumberTask = numberTask + 1
         const isLast = nextNumberTask === selectedTask.length
+
+        if (userAnswerNumber === task.correct) {
+            dispatch(pushCompletedTask(task.id))
+        }
+
         dispatch(isLast ? endTasks() : goToNextTask(`task-${nextNumberTask}`))
     }
 
