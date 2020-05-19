@@ -9,6 +9,7 @@ const initialState = {
     selectedCompositor: {},
     selectedSong: {},
     selectedTask: [],
+    selectedStroke: {},
 
     user: null,
     popout: <ScreenSpinner size='large' />,
@@ -36,6 +37,11 @@ const initialState = {
 
 function rootReducer(state = initialState, action) {
     switch (action.type) {
+        case TYPE.SET_SELECTED_STROKE:
+            return {
+                ...state,
+                selectedStroke: action.payload
+            }
         case TYPE.CLEAR_COMPLETED_TASK:
             return {
                 ...state,

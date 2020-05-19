@@ -1,0 +1,9 @@
+.custom-banner {
+
+}
+.custom-banner .Banner__expand {
+    display: none;
+}
+.custom-banner .Banner__actions {
+    padding-bottom: 8px;
+}

@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import bridge from '@vkontakte/vk-bridge';
 import '@vkontakte/vkui/dist/vkui.css';
 import { Compositors } from './components/Compositors';
 import { Songs } from './components/Songs';
-import {View, Panel, PanelHeader, PanelHeaderBack, ModalRoot, ModalCard} from "@vkontakte/vkui";
+import {
+	View,
+	Panel,
+	PanelHeader,
+	PanelHeaderBack,
+	ModalRoot,
+	ModalCard
+} from "@vkontakte/vkui";
 import Icon56MusicOutline from '@vkontakte/icons/dist/56/music_outline';
 import {
 	initialLoad,
@@ -17,6 +24,7 @@ import ConfigProvider from "@vkontakte/vkui/dist/components/ConfigProvider/Confi
 import {Translate} from "./components/Translate";
 import {Task} from "./components/Task";
 import * as STORAGE_KEYS from "./constants/storageKeys";
+import {HistorySetting} from "./components/HistorySettings";
 
 const App = () => {
 	const activePanel = useSelector(state => state.activePanel)
@@ -78,14 +86,16 @@ const App = () => {
 		dispatch(initialLoad())
 	}, [dispatch]);
 
+	const closeModalCard = () => dispatch(toggleModalCard(null))
+
 	const modal = (
 		<ModalRoot
 			activeModal={activeModalData}
-			onClose={() => dispatch(toggleModalCard(null))}
+			onClose={closeModalCard}
 		>
 			<ModalCard
 				id='card-song'
-				onClose={() => dispatch(toggleModalCard(null))}
+				onClose={closeModalCard}
 				icon={<Icon56MusicOutline />}
 				actionsLayout="vertical"
 				header={selectedSongName}
@@ -96,7 +106,7 @@ const App = () => {
 							title: 'Перевод',
 							mode: 'commerce',
 							action: () => {
-								dispatch(toggleModalCard(null))
+								closeModalCard()
 								dispatch(setSelectedTranslate())
 							}
 						},
@@ -104,13 +114,14 @@ const App = () => {
 							title: 'Упражнения',
 							mode: 'destructive',
 							action: () => {
-								dispatch(toggleModalCard(null))
+								closeModalCard()
 								dispatch(goToTasks())
 							}
 						}
 					]
 				}
 			/>
+			<HistorySetting id={'history-settings'}/>
 		</ModalRoot>
 	)
 

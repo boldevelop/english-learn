@@ -24,3 +24,5 @@ export const setProgress = progress => ({ type: TYPE.SET_PROGRESS, payload: prog
 export const formProgress = () => ({ type: TYPE.FORM_PROGRESS })
 export const pushCompletedTask = (id) => ({ type: TYPE.PUSH_COMPLETED_TASK, payload: id })
 export const clearCompletedTask = () => ({ type: TYPE.CLEAR_COMPLETED_TASK })
+export const setSelectedStroke = strokeObj => ({ type: TYPE.SET_SELECTED_STROKE, payload: strokeObj })
+export const publishHistory = ({ canvas, withTranslate, bgColor, textColor, toDataUrl }) => ({ type: TYPE.PUBLISH_HISTORY, payload: { canvas, withTranslate, bgColor, textColor } })

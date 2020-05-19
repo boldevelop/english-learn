@@ -1,8 +1,9 @@
 import React from 'react';
-import { Group, CardGrid, Card, Div, InfoRow, Progress, Title } from "@vkontakte/vkui";
+import { Group, CardGrid, InfoRow, Progress, Title } from "@vkontakte/vkui";
 import {useDispatch, useSelector} from "react-redux";
 import {setSelectedCompositorsSong} from "../actions";
 import {getCompleteTasksOfComp} from "../helpers";
+import Banner from "@vkontakte/vkui/dist/components/Banner/Banner";
 
 export const Compositors = () => {
     const compositors = useSelector(state => state.compositors)
@@ -13,43 +14,38 @@ export const Compositors = () => {
         <Group separator="hide">
             <CardGrid>
                 {compositors.map(compositor => {
-                    let isLoadProgress = true
                     let progressValue
                     let numberOfTasks
                     let completeIds
+                    let actions = null
+                    let subheader = null
 
                     if (progress.length) {
                         numberOfTasks = compositor.taskLength;
                         completeIds = getCompleteTasksOfComp(progress, compositor.id)
                         progressValue = completeIds.length / numberOfTasks * 100
-                        isLoadProgress = false
+
+                        subheader = `Выполнено ${completeIds.length} из ${numberOfTasks}`
+                        actions = (
+                            <InfoRow>
+                                <Progress value={progressValue}/>
+                            </InfoRow>
+                        )
                     }
 
+                    const header = <Title level="1" weight="regular" style={{marginBottom: 32}}>{compositor.name}</Title>
+
                     return (
-                        <Card
-                            key={compositor.id}
-                            size="l"
-                            mode="shadow"
+                        <Banner
+                            className={'custom-banner'}
+                            kei={compositor.id}
+                            mode="tint"
+                            asideMode="expand"
                             onClick={() => dispatch(setSelectedCompositorsSong(compositor))}
-                            style={{ marginBottom: 16 }}
-                        >
-                            <Div>
-                                <Title
-                                    level="1"
-                                    weight="semibold"
-                                    style={{ marginBottom: 16 }}
-                                >
-                                    {compositor.name}
-                                </Title>
-                            </Div>
-                            <Div>
-                                {!isLoadProgress &&
-                                    <InfoRow header={`Прогресс ${completeIds.length}/${numberOfTasks}`}>
-                                        <Progress value={progressValue}/>
-                                    </InfoRow>
-                                }
-                            </Div>
-                        </Card>
+                            header={header}
+                            subheader={subheader}
+                            actions={actions}
+                        />
                     )
                 })}
             </CardGrid>

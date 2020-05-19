@@ -18,13 +18,14 @@ import {
   setProgress,
   setSelectedCompositor,
   goBack,
-  clearCompletedTask
+  clearCompletedTask, setSelectedStroke
 } from "../actions";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import compositorsData from "../../data/compositors.json";
 import songsData from "../../data/songs.json";
 import translatedData from "../../data/translates.json";
 import tasksData from "../../data/tasks.json";
+import * as CANVAS from "../constants/canvas";
 
 export default function* watcherSaga() {
   yield takeEvery(TYPE.INITIAL_LOAD, initialSaga)
@@ -37,6 +38,31 @@ export default function* watcherSaga() {
   yield takeEvery(TYPE.GO_TO_TASKS, goToTasksSaga)
   yield takeEvery(TYPE.END_TASKS, endTasksSaga)
   yield takeEvery(TYPE.GO_TO_NEXT_TASK, goToNextTaskSaga)
+  yield takeEvery(TYPE.PUBLISH_HISTORY, publishHistorySaga)
+}
+
+function* publishHistorySaga(action) {
+  try {
+    yield put(setPopout(<ScreenSpinner size='large' />))
+    yield put(toggleModalCard(null))
+    const selectedStroke = yield select(state => state.selectedStroke)
+    yield put(setSelectedStroke({}))
+    const canvas = action.payload.canvas
+    const ctx = canvas.getContext('2d')
+    const withTranslate = action.payload.withTranslate
+    const bgColor = action.payload.bgColor
+    const textColor = action.payload.textColor
+    const blob = formBlobFromCanvasData({ctx, withTranslate, bgColor, textColor, selectedStroke, canvas})
+    yield call(bridge.send, "VKWebAppShowStoryBox", {
+      "background_type" : "image",
+      blob
+    })
+  } catch (e) {
+    console.log(e)
+  } finally {
+    yield put(setPopout(null))
+    action.payload.canvas.getContext('2d').clearRect(0, 0, CANVAS.height, CANVAS.width);
+  }
 }
 
 function* formProgressSaga() {
@@ -276,4 +302,19 @@ async function addCompletedIdsToProgress(progress, compId, songId, complIds) {
     //   value: JSON.stringify(progress),
     // });
   }
+}
+
+function formBlobFromCanvasData({ctx, withTranslate, selectedStroke, bgColor, textColor, canvas}) {
+  ctx.font = "62px sans"
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, CANVAS.width, CANVAS.height);
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillStyle = textColor
+  ctx.fillText(selectedStroke.en, CANVAS.width / 2, CANVAS.height / 2, CANVAS.width)
+  if (withTranslate) {
+    // отпутсить по ниже
+    ctx.fillText(selectedStroke.ru, CANVAS.width / 2, (CANVAS.height + 140) / 2, CANVAS.width)
+  }
+  return canvas.toDataURL("image/png")
 }

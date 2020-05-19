@@ -1,39 +1,16 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import { Group, CardGrid, Card, Text, Title, Div, Separator } from "@vkontakte/vkui";
-import {shallowEqual, useSelector} from "react-redux";
-import bridge from '@vkontakte/vk-bridge';
-
-const canvasWith = 1080
-const canvasHeight = 1920
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
+import {setSelectedStroke, toggleModalCard} from "../actions";
 
 export const Translate = () => {
-    const canvasRef = useRef(null)
+    const dispatch = useDispatch()
+
     const translate = useSelector(state => state.translate, shallowEqual)
 
     const onClickStroke = async (strokeData) => {
-        const ctx = canvasRef.current.getContext('2d')
-        ctx.font = "62px sans"
-        ctx.fillStyle = "#ABB8C3";
-        ctx.fillRect(0, 0, canvasWith, canvasHeight);
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-        ctx.fillStyle = "#00D084"
-        const emo = String.fromCodePoint(0x1F60E)
-        ctx.fillText(strokeData.en  + emo, canvasWith / 2, canvasHeight / 2, canvasWith)
-
-        try {
-            const blob = canvasRef.current.toDataURL("image/png")
-            await bridge.send(
-                "VKWebAppShowStoryBox",
-                {
-                    "background_type" : "image",
-                    blob
-                });
-        } catch(e) {
-            console.log(e)
-        } finally {
-            ctx.clearRect(0, 0, canvasWith, canvasWith);
-        }
+        dispatch(setSelectedStroke(strokeData))
+        dispatch(toggleModalCard('history-settings'))
     }
 
     return translate && (
@@ -54,7 +31,7 @@ export const Translate = () => {
                         </Card>
                     )
                 )}
-                <canvas ref={canvasRef} width={canvasWith} height={canvasHeight} style={{display: 'none'}}/>
+
             </CardGrid>
         </Group>
     )

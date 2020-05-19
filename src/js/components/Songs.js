@@ -1,8 +1,10 @@
 import React from 'react';
-import { Group, CardGrid, Card, Div, InfoRow, Progress, Title } from "@vkontakte/vkui";
+import { Group, CardGrid, InfoRow, Progress, Title } from "@vkontakte/vkui";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {setSelectedSong, toggleModalCard} from "../actions";
 import {getCompleteTasksOfSong} from "../helpers";
+import Banner from "@vkontakte/vkui/dist/components/Banner/Banner";
+import Caption from "@vkontakte/vkui/dist/components/Typography/Caption/Caption";
 
 export const Songs = () => {
     const selectedCompositorId = useSelector(state => state.selectedCompositor.id, shallowEqual)
@@ -23,23 +25,39 @@ export const Songs = () => {
                     const completeIds = getCompleteTasksOfSong(progress, selectedCompositorId, song.id)
                     const progressValue = completeIds.length / numberOfTasks * 100
 
+                    let header = <Title level="1" weight="regular" style={{marginBottom: 32}}>{song.name}</Title>
+                    if (song.feat) {
+                        header = (
+                            <>
+                                <Title level="1" weight="regular">{song.name}</Title>
+                                <Caption
+                                    level="1"
+                                    weight="regular"
+                                    style={{
+                                        marginBottom: 16,
+                                        color: 'var(--header_search_field_tint)'
+                                    }}>
+                                    feat: {song.feat}
+                                </Caption>
+                            </>
+                        )
+                    }
+
                     return (
-                        <Card
-                            key={song.id}
-                            size="l"
-                            mode="shadow"
+                        <Banner
+                            className={'custom-banner'}
+                            kei={song.id}
+                            mode="tint"
+                            asideMode="expand"
                             onClick={() => onClickCard(song)}
-                            style={{ marginBottom: 16 }}
-                        >
-                            <Div>
-                                <Title level="1" weight="semibold" style={{ marginBottom: 16 }}>{song.name}</Title>
-                            </Div>
-                            <Div>
-                                <InfoRow header={`Прогресс ${completeIds.length}/${numberOfTasks}`}>
+                            header={header}
+                            subheader={`Выполнено ${completeIds.length} из ${numberOfTasks}`}
+                            actions={
+                                <InfoRow>
                                     <Progress value={progressValue}/>
                                 </InfoRow>
-                            </Div>
-                        </Card>
+                            }
+                        />
                     )
                 })}
             </CardGrid>
