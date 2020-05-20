@@ -71,7 +71,7 @@ export const Compositors = () => {
                             key={compositor.id}
                             mode="tint"
                             asideMode="expand"
-                            before={<Avatar size={72} src={'https://sun9-64.userapi.com/c845420/v845420461/1b6cdc/cujqHbNvawE.jpg?ava=1'} />}
+                            before={<Avatar size={72} src={`./img/comp-${compositor.id}.jpg`} />}
                             onClick={() => dispatch(setSelectedCompositorsSong(compositor))}
                             header={header}
                             subheader={subheader}
