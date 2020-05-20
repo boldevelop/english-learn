@@ -39,11 +39,9 @@ const App = () => {
 				fetchedStorage.keys.forEach(({key, value}) => {
 					try {
 						data[key] = value !== undefined ? JSON.parse(value) : {}
-						console.log('data[key]', key)
 						switch (key) {
 							case STORAGE_KEYS.PROGRESS:
 								if (!data[key]) {
-									console.log('progress')
 									dispatch(formProgress())
 								} else {
 									dispatch(setProgress(data[STORAGE_KEYS.PROGRESS]))
@@ -57,7 +55,6 @@ const App = () => {
 					}
 				})
 			}
-			console.log(fetchedStorage)
 		}
 
 		bridge.subscribe(({ detail: { type, data } }) => {
@@ -82,7 +79,6 @@ const App = () => {
 			dispatch(goBack())
 		})
 		dispatch(initialLoad())
-
 	}, [dispatch]);
 
 
