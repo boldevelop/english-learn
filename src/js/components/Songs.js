@@ -22,7 +22,7 @@ export const Songs = () => {
         <Group separator="hide">
             <CardGrid>
                 {songs.map(song => {
-                    const numberOfTasks = song.tasksId.length;
+                    const numberOfTasks = song.tasksId.length
                     const completeIds = getCompleteTasksOfSong(progress, selectedCompositorId, song.id)
                     const progressValue = completeIds.length / numberOfTasks * 100
                     const isComplete = completeIds.length === numberOfTasks
@@ -48,8 +48,6 @@ export const Songs = () => {
                             </>
                         )
                     }
-
-
 
                     return (
                         <Banner

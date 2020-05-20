@@ -47,6 +47,8 @@ export const Task = ({ numberTask }) => {
         return "var(--background_highlighted)" // остальные
     }
 
+    task.answers.sort(() => Math.random() - 0.5)
+
     return (
         <>
             <PanelHeader>{songName}</PanelHeader>

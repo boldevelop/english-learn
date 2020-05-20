@@ -10,28 +10,24 @@ import {
 	PanelHeader,
 	PanelHeaderBack,
 	ModalRoot,
-	ModalCard
 } from "@vkontakte/vkui";
-import Icon56MusicOutline from '@vkontakte/icons/dist/56/music_outline';
 import {
 	initialLoad,
 	goBack,
-	setSelectedTranslate,
 	toggleModalCard,
-	goToTasks, setProgress, formProgress
+	setProgress, formProgress
 } from "./actions";
 import ConfigProvider from "@vkontakte/vkui/dist/components/ConfigProvider/ConfigProvider";
 import {Translate} from "./components/Translate";
 import {Task} from "./components/Task";
 import * as STORAGE_KEYS from "./constants/storageKeys";
 import {HistorySetting} from "./components/HistorySettings";
+import {CardSong} from "./components/CardSong";
 
 const App = () => {
 	const activePanel = useSelector(state => state.activePanel)
 	const stateHistory = useSelector(state => state.history, shallowEqual)
 	const popout = useSelector(state => state.popout, shallowEqual)
-	const selectedCompositorName = useSelector(state => state.selectedCompositor.name)
-	const selectedSongName = useSelector(state => state.selectedSong.name)
 	const activeModalData = useSelector(state => state.modalCard)
 	const [scheme, setScheme] = useState("bright_light")
 	const dispatch = useDispatch()
@@ -86,43 +82,13 @@ const App = () => {
 		dispatch(initialLoad())
 	}, [dispatch]);
 
-	const closeModalCard = () => dispatch(toggleModalCard(null))
-
 	const modal = (
 		<ModalRoot
 			activeModal={activeModalData}
-			onClose={closeModalCard}
+			onClose={() => dispatch(toggleModalCard(null))}
 		>
-			<ModalCard
-				id='card-song'
-				className='modal-card__song'
-				onClose={closeModalCard}
-				icon={<Icon56MusicOutline fill='var(--my-accent)'/>}
-				actionsLayout="vertical"
-				header={selectedSongName}
-				caption={selectedCompositorName}
-				actions={
-					[
-						{
-							title: 'Перевод',
-							mode: 'commerce',
-							action: () => {
-								closeModalCard()
-								dispatch(setSelectedTranslate())
-							}
-						},
-						{
-							title: 'Упражнения',
-							mode: 'destructive',
-							action: () => {
-								closeModalCard()
-								dispatch(goToTasks())
-							}
-						}
-					]
-				}
-			/>
-			<HistorySetting id={'history-settings'}/>
+			<CardSong id='card-song' />
+			<HistorySetting id='history-settings' />
 		</ModalRoot>
 	)
 

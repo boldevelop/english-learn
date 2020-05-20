@@ -121,14 +121,15 @@ function* goToTasksSaga() {
   try {
     const selectedSong = yield select(state => state.selectedSong)
     console.log(selectedSong)
-    yield put(setPopout(<ScreenSpinner size='large' />));
+    yield put(setPopout(<ScreenSpinner size='large' />))
     const tasks = yield call(loadTasks, selectedSong.tasksId)
+    tasks.sort(() => Math.random() - 0.5)
     yield put(setSongTasks(tasks))
   } catch(e) {
     console.log(e)
   } finally {
-    yield put(setPopout(null));
-    yield put(goToPage('task-0'));
+    yield put(setPopout(null))
+    yield put(goToPage('task-0'))
   }
 }
 
@@ -194,14 +195,14 @@ function* selectedCompositorSaga(action) {
 function* selectedTranslateSaga() {
   try {
     const selectedSong = yield select(state => state.selectedSong)
-    yield put(goToPage('translate'));
-    yield put(setPopout(<ScreenSpinner size='large' />));
-    const translate = yield call(loadTranslate, selectedSong.translateId);
-    yield put(setTranslate(translate));
+    yield put(goToPage('translate'))
+    yield put(setPopout(<ScreenSpinner size='large' />))
+    const translate = yield call(loadTranslate, selectedSong.translateId)
+    yield put(setTranslate(translate))
   } catch (e) {
-    console.log(e);
+    console.log(e)
   } finally {
-    yield put(setPopout(null));
+    yield put(setPopout(null))
   }
 }
 
