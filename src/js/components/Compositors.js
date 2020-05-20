@@ -1,8 +1,9 @@
 import React from 'react';
-import { Group, CardGrid, InfoRow, Progress, Title, Banner, Avatar } from "@vkontakte/vkui";
+import {Group, CardGrid, InfoRow, Progress, Title, Banner, Avatar, Div} from "@vkontakte/vkui";
 import {useDispatch, useSelector} from "react-redux";
 import {setSelectedCompositorsSong} from "../actions";
 import {getCompleteTasksOfComp} from "../helpers";
+import Card from "@vkontakte/vkui/dist/components/Card/Card";
 
 const identifyEmojiByType = (type) => {
     switch (type) {
@@ -26,6 +27,16 @@ export const Compositors = () => {
 
     return !!compositors.length && (
         <Group separator="hide">
+            <CardGrid>
+                <Card size="l">
+                    <Div>
+                        <div><span role='img' aria-label="ear">👂</span> Выбирай своего любимого исполнителя </div>
+                        <div><span role='img' aria-label="student hat">🎓</span> Выполняй задания на основе его треков </div>
+                        <div><span role='img' aria-label="hands">🙌</span> Делись своей любимой строчкой в историю </div>
+                        <div><span role='img' aria-label="wink">😉</span> И еще можешь прикрепить его песню </div>
+                    </Div>
+                </Card>
+            </CardGrid>
             <CardGrid>
                 {compositors.map(compositor => {
                     let progressValue

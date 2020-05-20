@@ -21,8 +21,8 @@ import CardGrid from "@vkontakte/vkui/dist/components/CardGrid/CardGrid";
 import Headline from "@vkontakte/vkui/dist/components/Typography/Headline/Headline";
 import * as CANVAS from "../constants/canvas";
 
-const backgroundArrayColors = ['#FFFFFF', '#FF6900', '#FCB900', '#7BDCB5', '#00D084', "#000000"]
-const textArrayColors = ['#FFFFFF', '#FF6900', '#FCB900', '#7BDCB5', '#00D084', "#000000"]
+const backgroundArrayColors = ['#FFFFFF', '#FCB900', '#FF6900', '#7BDCB5', '#7c3fcc', '#05386B', '#000000']
+const textArrayColors = ['#000000', '#282828', '#00D084', '#430d00', '#7BDCB5', '#dcfa6e', '#FFFFFF']
 const swatchStyles = {
     width: '30px',
     height: '30px',
@@ -59,7 +59,7 @@ const ColorPicker = ({ type, onClick, colors, title }) => {
 export const HistorySetting = ({ id }) => {
     const selectedStroke = useSelector(state => state.selectedStroke, shallowEqual)
 
-    const [bgColor, setBgColor] = useState('#FF6900')
+    const [bgColor, setBgColor] = useState('#7c3fcc')
     const [textColor, setTextColor] = useState('#000000')
     const [withTranslate, toggleWithTranslate] = useState(true)
 
@@ -121,7 +121,7 @@ export const HistorySetting = ({ id }) => {
 
             <Div>
                 <Text weight="regular" style={{ marginBottom: '.5rem' }}>
-                    Настройте любимую строчку под свои эмоции и поделитесь ею с друзьями
+                    <span role='img' aria-label="ear">🔥</span> Настройте под свои эмоции и поделитесь ею с друзьями
                 </Text>
             </Div>
 
@@ -156,7 +156,7 @@ export const HistorySetting = ({ id }) => {
             />
 
             <Div>
-                <Button onClick={submitSettings}>
+                <Button onClick={submitSettings} size="xl" mode="secondary" style={{background: 'var(--my-accent)'}}>
                     Открыть редактор истории
                 </Button>
             </Div>

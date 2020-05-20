@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Group, Div, CardGrid, Card, Title, FixedLayout, PanelHeader, Separator} from "@vkontakte/vkui";
+import {Group, Div, FixedLayout, PanelHeader, Separator} from "@vkontakte/vkui";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {endTasks, goToNextTask, pushCompletedTask} from "../actions";
