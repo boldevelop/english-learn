@@ -24,7 +24,7 @@
   },
   {
     "id": 112,
-    "question": "Расшифруйте сленговое выражение $tryna call$",
+    "question": "Расшифруйте сленговое выражение #tryna call#",
     "correct": 2,
     "answers": [
       {
@@ -70,7 +70,7 @@
   },
   {
     "id": 114,
-    "question": "Определите время глагола *I'm going through withdrawals*",
+    "question": "Определите время глагола I$'m going through$ withdrawals",
     "correct": 4,
     "answers": [
       {

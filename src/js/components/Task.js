@@ -1,8 +1,58 @@
 import React, {useState} from 'react';
-import {Group, Div, CardGrid, Card, Title, FixedLayout, PanelHeader } from "@vkontakte/vkui";
+import {Group, Div, CardGrid, Card, Title, FixedLayout, PanelHeader, Separator} from "@vkontakte/vkui";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {endTasks, goToNextTask, pushCompletedTask} from "../actions";
+import Text from "@vkontakte/vkui/dist/components/Typography/Text/Text";
+
+const metaSymbols = ['*', '$', '#']
+
+const createQuestionFromMatch = (match, style, displayType) => {
+    const accentPart = displayType === 'inline' ? (
+        <span style={{ color: 'var(--my-accent)', ...style }}>
+            {match[2]}
+        </span>
+    ) : (
+        <div style={{ color: 'var(--my-accent)', ...style }}>
+            {match[2]}
+        </div>
+    )
+    return (
+        <Div>
+            <Text style={{ fontSize: '1.1rem', lineHeight: '1.3rem' }}>
+                {match[1]}
+                {accentPart}
+                {match[3]}
+            </Text>
+        </Div>
+    )
+}
+
+const parserForQuestion = (question) => {
+    let metaSymbol
+
+    // find stroke with "some text #another# text" and identify symbol which stroke have
+    for (const sym of metaSymbols) {
+        const regExp = new RegExp(`\\${sym}(.+?)\\${sym}`, "g")
+        if (question.match(regExp) !== null) {
+            metaSymbol = sym
+        }
+    }
+
+    // exec regexp with detected symbol to "some text #another# text"
+    const regExpForMatch = new RegExp(`(.*?)\\${metaSymbol}(.+?)\\${metaSymbol}(.*)`, "g")
+    const match = regExpForMatch.exec(question)
+    switch (metaSymbol) {
+        case '$':
+            return createQuestionFromMatch(match, {}, 'inline')
+        case '*':
+            return createQuestionFromMatch(match, { marginTop: '5px', fontStyle: 'italic' })
+        case '#':
+            return createQuestionFromMatch(match, { marginTop: '5px', textTransform: 'uppercase' })
+        default:
+            return createQuestionFromMatch([null ,question], {})
+    }
+}
 
 export const Task = ({ numberTask }) => {
     const selectedTask = useSelector(state => state.selectedTask, shallowEqual)
@@ -47,18 +97,17 @@ export const Task = ({ numberTask }) => {
         return "var(--background_highlighted)" // остальные
     }
 
-    task.answers.sort(() => Math.random() - 0.5)
+    if (userAnswerNumber === -1) {
+        task.answers.sort(() => Math.random() - 0.5)
+    }
+
+    const question = parserForQuestion(task.question)
 
     return (
         <>
             <PanelHeader>{songName}</PanelHeader>
-            <CardGrid>
-                <Card size="l" style={{ marginTop: '3rem' }}>
-                    <Div>
-                        <Title level="2" weight="semibold" style={{ marginBottom: 16 }}>{task.question}</Title>
-                    </Div>
-                </Card>
-            </CardGrid>
+            {question}
+            <Separator />
             <Div>
                 <Group>
                     {task.answers.map((answer, i) => (
