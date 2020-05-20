@@ -9,6 +9,11 @@
     padding-bottom: 8px;
 }
 
+.custom-banner_translate.Banner {
+    margin: 12px 0;
+    padding: 0;
+}
+
 .custom-banner_song .Banner__in:before {
   border-color: var(--my-accent);
 }
