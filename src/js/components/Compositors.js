@@ -1,9 +1,23 @@
 import React from 'react';
-import { Group, CardGrid, InfoRow, Progress, Title } from "@vkontakte/vkui";
+import { Group, CardGrid, InfoRow, Progress, Title, Banner, Avatar } from "@vkontakte/vkui";
 import {useDispatch, useSelector} from "react-redux";
 import {setSelectedCompositorsSong} from "../actions";
 import {getCompleteTasksOfComp} from "../helpers";
-import Banner from "@vkontakte/vkui/dist/components/Banner/Banner";
+
+const identifyEmojiByType = (type) => {
+    switch (type) {
+        case 'rap':
+            return ' 🤙🏿'
+        case 'pop':
+            return ' 🕺🏽'
+        case 'star':
+            return ' 🔥'
+        case 'popular':
+            return ' 💥'
+        default:
+            return ''
+    }
+}
 
 export const Compositors = () => {
     const compositors = useSelector(state => state.compositors)
@@ -17,6 +31,7 @@ export const Compositors = () => {
                     let progressValue
                     let numberOfTasks
                     let completeIds
+
                     let actions = null
                     let subheader = null
 
@@ -25,22 +40,27 @@ export const Compositors = () => {
                         completeIds = getCompleteTasksOfComp(progress, compositor.id)
                         progressValue = completeIds.length / numberOfTasks * 100
 
+                        const completeClass = completeIds.length === numberOfTasks ? 'custom-progress_complete' : ''
                         subheader = `Выполнено ${completeIds.length} из ${numberOfTasks}`
+
                         actions = (
                             <InfoRow>
-                                <Progress value={progressValue}/>
+                                <Progress value={progressValue} className={`custom-progress ${completeClass}`}/>
                             </InfoRow>
                         )
                     }
 
-                    const header = <Title level="1" weight="regular" style={{marginBottom: 32}}>{compositor.name}</Title>
+                    const header = <Title level="1" weight="regular" style={{marginBottom: 22}}>
+                        {compositor.name} {identifyEmojiByType(compositor.type)}
+                    </Title>
 
                     return (
                         <Banner
                             className={'custom-banner'}
-                            kei={compositor.id}
+                            key={compositor.id}
                             mode="tint"
                             asideMode="expand"
+                            before={<Avatar size={72} src={'https://sun9-64.userapi.com/c845420/v845420461/1b6cdc/cujqHbNvawE.jpg?ava=1'} />}
                             onClick={() => dispatch(setSelectedCompositorsSong(compositor))}
                             header={header}
                             subheader={subheader}

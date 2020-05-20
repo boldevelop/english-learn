@@ -95,8 +95,9 @@ const App = () => {
 		>
 			<ModalCard
 				id='card-song'
+				className='modal-card__song'
 				onClose={closeModalCard}
-				icon={<Icon56MusicOutline />}
+				icon={<Icon56MusicOutline fill='var(--my-accent)'/>}
 				actionsLayout="vertical"
 				header={selectedSongName}
 				caption={selectedCompositorName}
@@ -135,7 +136,7 @@ const App = () => {
 				  modal={modal}
 			>
 				<Panel id='all'>
-					<PanelHeader>Композиторы</PanelHeader>
+					<PanelHeader>Исполнители</PanelHeader>
 					<Compositors />
 				</Panel>
 
@@ -143,7 +144,7 @@ const App = () => {
 					<PanelHeader
 						left={<PanelHeaderBack onClick={() => window.history.back()} />}
 					>
-						Композиции
+						Треки
 					</PanelHeader>
 					<Songs />
 				</Panel>

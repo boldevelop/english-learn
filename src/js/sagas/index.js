@@ -313,7 +313,6 @@ function formBlobFromCanvasData({ctx, withTranslate, selectedStroke, bgColor, te
   ctx.fillStyle = textColor
   ctx.fillText(selectedStroke.en, CANVAS.width / 2, CANVAS.height / 2, CANVAS.width)
   if (withTranslate) {
-    // отпутсить по ниже
     ctx.fillText(selectedStroke.ru, CANVAS.width / 2, (CANVAS.height + 140) / 2, CANVAS.width)
   }
   return canvas.toDataURL("image/png")

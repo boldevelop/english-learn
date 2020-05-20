@@ -1,9 +1,22 @@
-.custom-banner {
-
+.custom-banner.Banner {
+    margin: 20px 0;
+    padding: 0;
 }
 .custom-banner .Banner__expand {
     display: none;
 }
 .custom-banner .Banner__actions {
     padding-bottom: 8px;
+}
+
+.custom-banner_song .Banner__in:before {
+  border-color: var(--my-accent);
+}
+
+.custom-banner_song.complete .Banner__in:before {
+    border-color: var(--field_valid_border);
+}
+
+.custom-banner_song.complete .Progress__in {
+    background: var(--field_valid_border);
 }

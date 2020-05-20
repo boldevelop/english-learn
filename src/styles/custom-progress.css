@@ -1,0 +1,7 @@
+.custom-progress .Progress__in {
+    background: var(--my-accent);
+}
+
+.custom-progress_complete .Progress__in {
+    background: var(--field_valid_border);
+}

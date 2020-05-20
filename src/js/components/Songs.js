@@ -5,6 +5,7 @@ import {setSelectedSong, toggleModalCard} from "../actions";
 import {getCompleteTasksOfSong} from "../helpers";
 import Banner from "@vkontakte/vkui/dist/components/Banner/Banner";
 import Caption from "@vkontakte/vkui/dist/components/Typography/Caption/Caption";
+import Icon28CheckCircleOutline from '@vkontakte/icons/dist/28/check_circle_outline';
 
 export const Songs = () => {
     const selectedCompositorId = useSelector(state => state.selectedCompositor.id, shallowEqual)
@@ -24,12 +25,17 @@ export const Songs = () => {
                     const numberOfTasks = song.tasksId.length;
                     const completeIds = getCompleteTasksOfSong(progress, selectedCompositorId, song.id)
                     const progressValue = completeIds.length / numberOfTasks * 100
+                    const isComplete = completeIds.length === numberOfTasks
+                    const completeClass = isComplete ? 'complete' : ''
+                    const completeIcon = isComplete ? <Icon28CheckCircleOutline fill='var(--field_valid_border)'/> : ''
 
-                    let header = <Title level="1" weight="regular" style={{marginBottom: 32}}>{song.name}</Title>
+                    let header = <Title level="1" weight="regular" style={{marginBottom: 32, display: 'flex', justifyContent: 'space-between' }}>
+                        {song.name}&nbsp;{completeIcon}
+                    </Title>
                     if (song.feat) {
                         header = (
                             <>
-                                <Title level="1" weight="regular">{song.name}</Title>
+                                <Title level="1" weight="regular" style={{ display: 'flex', justifyContent: 'space-between' }}>{song.name}&nbsp;{completeIcon}</Title>
                                 <Caption
                                     level="1"
                                     weight="regular"
@@ -43,10 +49,12 @@ export const Songs = () => {
                         )
                     }
 
+
+
                     return (
                         <Banner
-                            className={'custom-banner'}
-                            kei={song.id}
+                            className={`custom-banner custom-banner_song ${completeClass}`}
+                            key={song.id}
                             mode="tint"
                             asideMode="expand"
                             onClick={() => onClickCard(song)}
@@ -54,7 +62,7 @@ export const Songs = () => {
                             subheader={`Выполнено ${completeIds.length} из ${numberOfTasks}`}
                             actions={
                                 <InfoRow>
-                                    <Progress value={progressValue}/>
+                                    <Progress value={progressValue}  className={`custom-progress ${completeClass}`}/>
                                 </InfoRow>
                             }
                         />
