@@ -32,32 +32,34 @@ const App = () => {
 	const [scheme, setScheme] = useState("bright_light")
 	const dispatch = useDispatch()
 
-	const storageResponseHandler = (fetchedStorage) => {
-		if (Array.isArray(fetchedStorage.keys)) {
-			const data = {}
-			fetchedStorage.keys.forEach(({key, value}) => {
-				try {
-					data[key] = value !== undefined ? JSON.parse(value) : {}
-					switch (key) {
-						case STORAGE_KEYS.PROGRESS:
-							if (!data[key]) {
-								dispatch(formProgress())
-							} else {
-								dispatch(setProgress(data[STORAGE_KEYS.PROGRESS]))
-							}
-							break;
-						default:
-							break;
-					}
-				} catch (e) {
-					console.log(e);
-				}
-			})
-		}
-		console.log(fetchedStorage)
-	}
-
 	useEffect(() => {
+		const storageResponseHandler = (fetchedStorage) => {
+			if (Array.isArray(fetchedStorage.keys)) {
+				const data = {}
+				fetchedStorage.keys.forEach(({key, value}) => {
+					try {
+						data[key] = value !== undefined ? JSON.parse(value) : {}
+						console.log('data[key]', key)
+						switch (key) {
+							case STORAGE_KEYS.PROGRESS:
+								if (!data[key]) {
+									console.log('progress')
+									dispatch(formProgress())
+								} else {
+									dispatch(setProgress(data[STORAGE_KEYS.PROGRESS]))
+								}
+								break;
+							default:
+								break;
+						}
+					} catch (e) {
+						console.log(e);
+					}
+				})
+			}
+			console.log(fetchedStorage)
+		}
+
 		bridge.subscribe(({ detail: { type, data } }) => {
 			switch (type) {
 				case 'VKWebAppUpdateConfig':
@@ -80,7 +82,9 @@ const App = () => {
 			dispatch(goBack())
 		})
 		dispatch(initialLoad())
+
 	}, [dispatch]);
+
 
 	const modal = (
 		<ModalRoot
