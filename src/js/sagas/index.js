@@ -152,7 +152,7 @@ function* goBackSaga() {
 function* initialSaga() {
   try {
     yield put(setPopout(<ScreenSpinner size='large' />))
-    yield call(bridge.send, 'VKWebAppInit')
+    yield call(bridge.send, 'VKWebAppInit', {})
     const payload = yield call(bridge.send, 'VKWebAppGetUserInfo')
     yield put(setUser(payload))
     yield call(loadCompositorsSaga)
