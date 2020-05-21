@@ -75,6 +75,48 @@ const App = () => {
 		}
 
 		bridge.subscribe(({ detail: { type, data } }) => {
+			if (data.hasOwnProperty('error_type') && data.hasOwnProperty('error_data')) {
+				const errorType = data.error_type;
+				const errorData = data.error_data;
+				let info = null
+				if (errorType === 'client_error') {
+					info = (
+						<>
+							<div>Код ошибки: {errorData.error_code}</div>
+							<div>Описание: {errorData.error_reason}</div>
+							<div>Подробно: {errorData.error_description}</div>
+						</>
+					)
+				}
+				if (errorType === 'api_error') {
+					info = (
+						<>
+							<div>Код ошибки: {errorData.error_code}</div>
+							<div>Описание: {errorData.error_msg}</div>
+						</>
+					)
+				}
+				if (errorType === 'auth_error') {
+					info = (
+						<>
+							<div>Код ошибки: {errorData.error}</div>
+							<div>Описание: {errorData.error_reason}</div>
+							<div>Подробно: {errorData.error_description}</div>
+						</>
+					)
+				}
+				setSnackbar(
+					<Snackbar
+						layout='vertical'
+						onClose={() => setSnackbar(null)}
+						before={<Avatar size={24} style={{backgroundColor: 'var(--dynamic_red)'}}><Icon24Error fill='#fff' width={14} height={14} /></Avatar>}
+						duration={900}
+					>
+					{info}
+					</Snackbar>
+				);
+			}
+
 			switch (type) {
 				case 'VKWebAppUpdateConfig':
 					setScheme(data.scheme)
@@ -87,6 +129,9 @@ const App = () => {
 					break
 				case 'VKWebAppShowStoryBoxFailed':
 					console.log('data', data)
+					break
+				case 'VKWebAppInitFailed':
+
 					break
 				default:
 					break
