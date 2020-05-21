@@ -21,10 +21,10 @@ import {
   clearCompletedTask, setSelectedStroke
 } from "../actions";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
-import compositorsData from "../../data/compositors.json";
-import songsData from "../../data/songs.json";
-import translatedData from "../../data/translates.json";
-import tasksData from "../../data/tasks.json";
+import compositorsData from "../data/compositors.js";
+import songsData from "../data/songs.js";
+import translatedData from "../data/translates.js";
+import tasksData from "../data/tasks.js";
 import * as CANVAS from "../constants/canvas";
 
 export default function* watcherSaga() {

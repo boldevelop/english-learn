@@ -50,11 +50,6 @@ const App = () => {
 								} else {
 									dispatch(formProgress())
 								}
-								if (!data[key]) {
-
-								} else {
-
-								}
 								break;
 							default:
 								break;
@@ -64,7 +59,7 @@ const App = () => {
 								layout='vertical'
 								onClose={() => setSnackbar(null)}
 								before={<Avatar size={24} style={{backgroundColor: 'var(--dynamic_red)'}}><Icon24Error fill='#fff' width={14} height={14} /></Avatar>}
-								duration={900}
+								duration={1000}
 							>
 								Проблема с получением данных из Storage
 							</Snackbar>
@@ -75,7 +70,7 @@ const App = () => {
 		}
 
 		bridge.subscribe(({ detail: { type, data } }) => {
-			if (data.hasOwnProperty('error_type') && data.hasOwnProperty('error_data')) {
+			if (data.hasOwnProperty('error_type') && data.hasOwnProperty('error_data') && type !== 'VKWebAppShowStoryBoxFailed') {
 				const errorType = data.error_type;
 				const errorData = data.error_data;
 				let info = null
@@ -110,7 +105,7 @@ const App = () => {
 						layout='vertical'
 						onClose={() => setSnackbar(null)}
 						before={<Avatar size={24} style={{backgroundColor: 'var(--dynamic_red)'}}><Icon24Error fill='#fff' width={14} height={14} /></Avatar>}
-						duration={900}
+						duration={3000}
 					>
 					{info}
 					</Snackbar>
@@ -125,13 +120,17 @@ const App = () => {
 					storageResponseHandler(data)
 					break
 				case 'VKWebAppShowStoryBoxResult':
-					console.log('data', data)
+					setSnackbar(<Snackbar
+							layout='vertical'
+							onClose={() => setSnackbar(null)}
+							before={<Avatar size={24} style={{backgroundColor: 'var(--field_valid_border)'}}><Icon24Error fill='#fff' width={14} height={14} /></Avatar>}
+							duration={3000}
+						>
+							Опубликовано
+						</Snackbar>
+					);
 					break
 				case 'VKWebAppShowStoryBoxFailed':
-					console.log('data', data)
-					break
-				case 'VKWebAppInitFailed':
-
 					break
 				default:
 					break
