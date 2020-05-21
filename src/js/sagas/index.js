@@ -300,7 +300,7 @@ async function addCompletedIdsToProgress(progress, compId, songId, complIds) {
   if (addedIds.length) {
     await bridge.send('VKWebAppStorageSet', {
       key: STORAGE_KEYS.PROGRESS,
-      value: JSON.stringify(progress),
+      value: JSON.stringify({progress}),
     });
   }
 }

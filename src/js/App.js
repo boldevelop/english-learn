@@ -10,6 +10,7 @@ import {
 	PanelHeader,
 	PanelHeaderBack,
 	ModalRoot,
+	Snackbar
 } from "@vkontakte/vkui";
 import {
 	initialLoad,
@@ -23,6 +24,8 @@ import {Task} from "./components/Task";
 import * as STORAGE_KEYS from "./constants/storageKeys";
 import {HistorySetting} from "./components/HistorySettings";
 import {CardSong} from "./components/CardSong";
+import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
+import Icon24Error from '@vkontakte/icons/dist/24/error';
 
 const App = () => {
 	const activePanel = useSelector(state => state.activePanel)
@@ -30,6 +33,7 @@ const App = () => {
 	const popout = useSelector(state => state.popout, shallowEqual)
 	const activeModalData = useSelector(state => state.modalCard)
 	const [scheme, setScheme] = useState("bright_light")
+	const [snackbar, setSnackbar] = useState(null)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -38,20 +42,33 @@ const App = () => {
 				const data = {}
 				fetchedStorage.keys.forEach(({key, value}) => {
 					try {
-						data[key] = value !== undefined ? JSON.parse(value) : {}
+						data[key] = value ? JSON.parse(value) : {}
 						switch (key) {
 							case STORAGE_KEYS.PROGRESS:
-								if (!data[key]) {
-									dispatch(formProgress())
+								if (data[key] && data[key].progress) {
+									dispatch(setProgress(data[key].progress))
 								} else {
-									dispatch(setProgress(data[STORAGE_KEYS.PROGRESS]))
+									dispatch(formProgress())
+								}
+								if (!data[key]) {
+
+								} else {
+
 								}
 								break;
 							default:
 								break;
 						}
-					} catch (e) {
-						console.log(e);
+					} catch (error) {
+						setSnackbar(<Snackbar
+								layout='vertical'
+								onClose={() => setSnackbar(null)}
+								before={<Avatar size={24} style={{backgroundColor: 'var(--dynamic_red)'}}><Icon24Error fill='#fff' width={14} height={14} /></Avatar>}
+								duration={900}
+							>
+								Проблема с получением данных из Storage
+							</Snackbar>
+						);
 					}
 				})
 			}
@@ -98,7 +115,7 @@ const App = () => {
 				  history={stateHistory} // Ставим историю как массив панелей.
 				  onSwipeBack={() => dispatch(goBack())} // При свайпе выполняется данная функция.
 				  activePanel={activePanel}
-				  popout={popout}
+				  popout={popout || snackbar}
 				  modal={modal}
 			>
 				<Panel id='all'>
