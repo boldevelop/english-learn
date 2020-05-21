@@ -105,7 +105,7 @@ const App = () => {
 						layout='vertical'
 						onClose={() => setSnackbar(null)}
 						before={<Avatar size={24} style={{backgroundColor: 'var(--dynamic_red)'}}><Icon24Error fill='#fff' width={14} height={14} /></Avatar>}
-						duration={20000}
+						duration={1000}
 					>
 					{info}
 					</Snackbar>
