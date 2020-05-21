@@ -105,7 +105,7 @@ const App = () => {
 						layout='vertical'
 						onClose={() => setSnackbar(null)}
 						before={<Avatar size={24} style={{backgroundColor: 'var(--dynamic_red)'}}><Icon24Error fill='#fff' width={14} height={14} /></Avatar>}
-						duration={3000}
+						duration={20000}
 					>
 					{info}
 					</Snackbar>
@@ -120,7 +120,8 @@ const App = () => {
 					storageResponseHandler(data)
 					break
 				case 'VKWebAppShowStoryBoxResult':
-					setSnackbar(<Snackbar
+					setSnackbar(
+						<Snackbar
 							layout='vertical'
 							onClose={() => setSnackbar(null)}
 							before={<Avatar size={24} style={{backgroundColor: 'var(--field_valid_border)'}}><Icon24Error fill='#fff' width={14} height={14} /></Avatar>}

@@ -102,7 +102,7 @@ function* setCompletedTaskSaga() {
     yield put(setProgress(progress))
     yield put(clearCompletedTask())
   } catch (e) {
-
+    console.log(e)
   }
 }
 
@@ -120,7 +120,6 @@ function* goToPageSaga(action) {
 function* goToTasksSaga() {
   try {
     const selectedSong = yield select(state => state.selectedSong)
-    console.log(selectedSong)
     yield put(setPopout(<ScreenSpinner size='large' />))
     const tasks = yield call(loadTasks, selectedSong.tasksId)
     tasks.sort(() => Math.random() - 0.5)
@@ -152,8 +151,8 @@ function* goBackSaga() {
 function* initialSaga() {
   try {
     yield put(setPopout(<ScreenSpinner size='large' />))
-    yield call(bridge.send, 'VKWebAppInit', {})
-    const payload = yield call(bridge.send, 'VKWebAppGetUserInfo')
+    // yield call(bridge.send, 'VKWebAppInit', {})
+    const payload = yield call(bridge.send, 'VKWebAppGetUserInfo', {})
     yield put(setUser(payload))
     yield call(loadCompositorsSaga)
   } catch (e) {
@@ -207,8 +206,12 @@ function* selectedTranslateSaga() {
 }
 
 function* loadCompositorsSaga() {
-  const compositors = yield call(loadCompositors)
-  yield put(setCompositors(compositors))
+  try {
+    const compositors = yield call(loadCompositors)
+    yield put(setCompositors(compositors))
+  } catch(e) {
+    console.log(e)
+  }
 }
 
 function loadCompositors() {
