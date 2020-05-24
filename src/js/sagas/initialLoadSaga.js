@@ -1,9 +1,9 @@
 import React from 'react';
 import {call, put} from "redux-saga/effects";
-import {setCompositors, setPopout, setUser} from "../actions";
+import {setPopout, setSongs, setUser} from "../actions";
 import ScreenSpinner from "@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner";
 import bridge from "@vkontakte/vk-bridge";
-import compositorsData from "../data/compositors";
+import allSongsData from "../data/allSongs";
 import * as STORAGE_KEYS from "../constants/storageKeys";
 
 export function* initialSaga() {
@@ -11,7 +11,7 @@ export function* initialSaga() {
         yield put(setPopout(<ScreenSpinner size='large' />))
         const payload = yield call(bridge.send, 'VKWebAppGetUserInfo', {})
         yield put(setUser(payload))
-        yield call(loadCompositorsSaga)
+        yield call(loadAllSongsSaga)
         yield call(getProgressFromStorageSaga)
     } catch (e) {
         console.log(e)
@@ -33,15 +33,15 @@ function* getProgressFromStorageSaga() {
     }
 }
 
-function* loadCompositorsSaga() {
+function* loadAllSongsSaga() {
     try {
-        const compositors = yield call(loadCompositors)
-        yield put(setCompositors(compositors))
+        const allSongs = yield call(loadAllSongs)
+        yield put(setSongs(allSongs))
     } catch(e) {
         console.log(e)
     }
 }
 
-function loadCompositors() {
-    return Promise.resolve(compositorsData)
+function loadAllSongs() {
+    return Promise.resolve(allSongsData)
 }

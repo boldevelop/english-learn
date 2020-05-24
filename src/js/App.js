@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import bridge from '@vkontakte/vk-bridge';
 import '@vkontakte/vkui/dist/vkui.css';
-import { Compositors } from './components/Compositors';
 import { Songs } from './components/Songs';
 import {
 	View,
@@ -25,6 +24,7 @@ import {HistorySetting} from "./components/HistorySettings";
 import {CardSong} from "./components/CardSong";
 import {formErrorInfo} from "./helpers/formErrorInfo";
 import {SnackbarError} from "./components/SnackbarError";
+import {AllSongs} from "./components/AllSongs";
 
 const App = () => {
 	const activePanel = useSelector(state => state.activePanel)
@@ -110,10 +110,7 @@ const App = () => {
 				  popout={popout}
 				  modal={modal}
 			>
-				<Panel id='all'>
-					<PanelHeader>Исполнители</PanelHeader>
-					<Compositors />
-				</Panel>
+				<AllSongs id='all' />
 
 				<Panel id='selected'>
 					<PanelHeader

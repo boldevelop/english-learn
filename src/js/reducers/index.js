@@ -14,7 +14,6 @@ const initialState = {
     user: null,
     popout: <ScreenSpinner size='large' />,
 
-    compositors: [],
     songs: [],
     translate: null,
 
@@ -96,11 +95,6 @@ function rootReducer(state = initialState, action) {
             return {
                 ...state,
                 songs: action.payload
-            }
-        case TYPE.SET_COMPOSITORS:
-            return {
-                ...state,
-                compositors: action.payload
             }
         case TYPE.SET_POPOUT:
             return {

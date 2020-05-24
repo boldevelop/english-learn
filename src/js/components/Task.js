@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Group, Div, FixedLayout, PanelHeader, Separator} from "@vkontakte/vkui";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
-import {endTasks, goToNextTask, pushCompletedTask} from "../actions";
+import {endTasks, pushCompletedTask, setActivePanel} from "../actions";
 import Text from "@vkontakte/vkui/dist/components/Typography/Text/Text";
 
 const metaSymbols = ['*', '$', '#']
@@ -72,7 +72,7 @@ export const Task = ({ numberTask }) => {
             dispatch(pushCompletedTask(task.id))
         }
 
-        dispatch(isLast ? endTasks() : goToNextTask(`task-${nextNumberTask}`))
+        dispatch(isLast ? endTasks() : setActivePanel(`task-${nextNumberTask}`))
     }
 
     const onClickAnswer = (buttonId) => {

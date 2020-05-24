@@ -1,3 +1,23 @@
+.custom-banner__header {
+    display: flex;
+    margin-bottom: 12px;
+}
+
+.custom-banner__avatar {
+    margin-right: 16px;
+    flex: 0 0 auto;
+}
+
+.custom-banner__content {
+    width: 100%;
+}
+
+.custom-banner__content-title {
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+}
+
 .custom-banner.Banner {
     margin: 20px 0;
     padding: 0;
@@ -18,10 +38,10 @@
   border-color: var(--my-accent);
 }
 
-.custom-banner_song.complete .Banner__in:before {
+.custom-banner.complete .Banner__in:before {
     border-color: var(--field_valid_border);
 }
 
-.custom-banner_song.complete .Progress__in {
+.custom-banner.complete .Progress__in {
     background: var(--field_valid_border);
 }
