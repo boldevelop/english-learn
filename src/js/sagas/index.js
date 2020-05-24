@@ -4,9 +4,7 @@ import * as TYPE from "../constants/actionTypes";
 import * as STORAGE_KEYS from "../constants/storageKeys";
 import bridge from '@vkontakte/vk-bridge';
 import {
-  setUser,
   setPopout,
-  setCompositors,
   setActivePanel,
   setSongs,
   pushHistory,
@@ -21,15 +19,14 @@ import {
   clearCompletedTask, setSelectedStroke
 } from "../actions";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
-import compositorsData from "../data/compositors.js";
 import songsData from "../data/songs.js";
 import translatedData from "../data/translates.js";
 import tasksData from "../data/tasks.js";
 import * as CANVAS from "../constants/canvas";
+import {initialSaga} from "./initialLoadSaga";
 
 export default function* watcherSaga() {
   yield takeEvery(TYPE.INITIAL_LOAD, initialSaga)
-  yield takeEvery(TYPE.INITIAL_COMPLETE, getProgressSaga)
   yield takeEvery(TYPE.FORM_PROGRESS, formProgressSaga)
   yield takeEvery(TYPE.SET_SELECTED_COMPOSITORS_SONG, selectedCompositorSaga)
   yield takeEvery(TYPE.SET_SELECTED_TRANSLATE, selectedTranslateSaga)
@@ -148,40 +145,12 @@ function* goBackSaga() {
   }
 }
 
-function* initialSaga() {
-  try {
-    yield put(setPopout(<ScreenSpinner size='large' />))
-    // yield call(bridge.send, 'VKWebAppInit', {})
-    const payload = yield call(bridge.send, 'VKWebAppGetUserInfo', {})
-    yield put(setUser(payload))
-    yield call(loadCompositorsSaga)
-  } catch (e) {
-      console.log(e)
-  } finally {
-    yield put(setPopout(null))
-    yield put({type: 'INITIAL_COMPLETE'})
-  }
-}
-
-function* getProgressSaga() {
-  try {
-    yield call(
-        bridge.send,
-        'VKWebAppStorageGet',
-        {
-          keys: [STORAGE_KEYS.PROGRESS]
-        })
-  } catch(e) {
-    console.log(e)
-  }
-}
-
 function* selectedCompositorSaga(action) {
   try {
     yield put(goToPage('selected'))
     yield put(setSongs([])) // clear its need it or component will be get progress from old-prev songs
     yield put(setPopout(<ScreenSpinner size='large' />))
-    const songs = yield call(loadSongs, action.payload.songId)
+    const songs = yield call(loadSongsById, action.payload.songId)
     yield put(setSelectedCompositor(action.payload))
     yield put(setSongs(songs))
   } catch (e) {
@@ -205,20 +174,7 @@ function* selectedTranslateSaga() {
   }
 }
 
-function* loadCompositorsSaga() {
-  try {
-    const compositors = yield call(loadCompositors)
-    yield put(setCompositors(compositors))
-  } catch(e) {
-    console.log(e)
-  }
-}
-
-function loadCompositors() {
-  return Promise.resolve(compositorsData)
-}
-
-function loadSongs(songsId) {
+function loadSongsById(songsId) {
   let songs = [];
   for (const id of songsId) {
     songsData.forEach(currentSong => {

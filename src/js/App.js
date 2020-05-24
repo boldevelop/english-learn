@@ -10,13 +10,12 @@ import {
 	PanelHeader,
 	PanelHeaderBack,
 	ModalRoot,
-	Snackbar
 } from "@vkontakte/vkui";
 import {
 	initialLoad,
 	goBack,
 	toggleModalCard,
-	setProgress, formProgress
+	setProgress, formProgress, setPopout
 } from "./actions";
 import ConfigProvider from "@vkontakte/vkui/dist/components/ConfigProvider/ConfigProvider";
 import {Translate} from "./components/Translate";
@@ -24,9 +23,8 @@ import {Task} from "./components/Task";
 import * as STORAGE_KEYS from "./constants/storageKeys";
 import {HistorySetting} from "./components/HistorySettings";
 import {CardSong} from "./components/CardSong";
-import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
-import Icon24Error from '@vkontakte/icons/dist/24/error';
 import {formErrorInfo} from "./helpers/formErrorInfo";
+import {SnackbarError} from "./components/SnackbarError";
 
 const App = () => {
 	const activePanel = useSelector(state => state.activePanel)
@@ -35,7 +33,6 @@ const App = () => {
 	const activeModalData = useSelector(state => state.modalCard)
 	const songName = useSelector(state => state.selectedSong.name)
 	const [scheme, setScheme] = useState("bright_light")
-	const [snackbar, setSnackbar] = useState(null)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -57,15 +54,9 @@ const App = () => {
 								break;
 						}
 					} catch (error) {
-						setSnackbar(<Snackbar
-								layout='vertical'
-								onClose={() => setSnackbar(null)}
-								before={<Avatar size={24} style={{backgroundColor: 'var(--dynamic_red)'}}><Icon24Error fill='#fff' width={14} height={14} /></Avatar>}
-								duration={1000}
-							>
-								Проблема с получением данных из Storage
-							</Snackbar>
-						);
+						dispatch(
+							setPopout(<SnackbarError message='Проблема с получением данных из Storage' type='error' />)
+						)
 					}
 				})
 			}
@@ -74,20 +65,7 @@ const App = () => {
 		bridge.subscribe(({ detail: { type, data } }) => {
 			if (data.hasOwnProperty('error_type') && data.hasOwnProperty('error_data') && type !== 'VKWebAppShowStoryBoxFailed') {
 				const info = formErrorInfo(data)
-				setSnackbar(
-					<Snackbar
-						layout='vertical'
-						onClose={() => setSnackbar(null)}
-						before={
-							<Avatar size={24} style={{backgroundColor: 'var(--dynamic_red)'}}>
-								<Icon24Error fill='#fff' width={14} height={14} />
-							</Avatar>
-						}
-						duration={1000}
-					>
-					{info}
-					</Snackbar>
-				);
+				dispatch(setPopout(<SnackbarError message={info} type='error' />))
 			}
 
 			switch (type) {
@@ -98,20 +76,7 @@ const App = () => {
 					storageResponseHandler(data)
 					break
 				case 'VKWebAppShowStoryBoxResult':
-					setSnackbar(
-						<Snackbar
-							layout='vertical'
-							onClose={() => setSnackbar(null)}
-							before={
-								<Avatar size={24} style={{backgroundColor: 'var(--field_valid_border)'}}>
-									<Icon24Error fill='#fff' width={14} height={14} />
-								</Avatar>
-							}
-							duration={3000}
-						>
-							Опубликовано
-						</Snackbar>
-					);
+					dispatch(setPopout(<SnackbarError message='Опубликовано' type='info'/>))
 					break
 				case 'VKWebAppShowStoryBoxFailed':
 					break
@@ -142,7 +107,7 @@ const App = () => {
 				  history={stateHistory} // Ставим историю как массив панелей.
 				  onSwipeBack={() => dispatch(goBack())} // При свайпе выполняется данная функция.
 				  activePanel={activePanel}
-				  popout={popout || snackbar}
+				  popout={popout}
 				  modal={modal}
 			>
 				<Panel id='all'>
