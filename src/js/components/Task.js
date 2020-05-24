@@ -62,12 +62,12 @@ export const Task = ({ numberTask }) => {
     const dispatch = useDispatch()
 
     const task = selectedTask[numberTask]
+    const lengthOfTask = selectedTask.length
+    const nextNumberTask = numberTask + 1
     const songName = selectedSong.name
+    const isLast = nextNumberTask === selectedTask.length
 
     const onClickNextButtonTask = () => {
-        const nextNumberTask = numberTask + 1
-        const isLast = nextNumberTask === selectedTask.length
-
         if (userAnswerNumber === task.correct) {
             dispatch(pushCompletedTask(task.id))
         }
@@ -105,7 +105,7 @@ export const Task = ({ numberTask }) => {
 
     return (
         <>
-            <PanelHeader>{songName}</PanelHeader>
+            <PanelHeader>{`${songName} ${nextNumberTask}/${lengthOfTask}`}</PanelHeader>
             {question}
             <Separator />
             <Div>
@@ -129,7 +129,9 @@ export const Task = ({ numberTask }) => {
             {isShowNextButton &&
                 <FixedLayout vertical="bottom">
                     <Div>
-                        <Button size="xl" mode="secondary" onClick={onClickNextButtonTask}>Next</Button>
+                        <Button size="xl" mode="secondary" onClick={onClickNextButtonTask}>
+                            {isLast ? 'Завершить' : 'Перейти к следующему'}
+                        </Button>
                     </Div>
                 </FixedLayout>
             }

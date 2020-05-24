@@ -26,12 +26,14 @@ import {HistorySetting} from "./components/HistorySettings";
 import {CardSong} from "./components/CardSong";
 import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 import Icon24Error from '@vkontakte/icons/dist/24/error';
+import {formErrorInfo} from "./helpers/formErrorInfo";
 
 const App = () => {
 	const activePanel = useSelector(state => state.activePanel)
 	const stateHistory = useSelector(state => state.history, shallowEqual)
 	const popout = useSelector(state => state.popout, shallowEqual)
 	const activeModalData = useSelector(state => state.modalCard)
+	const songName = useSelector(state => state.selectedSong.name)
 	const [scheme, setScheme] = useState("bright_light")
 	const [snackbar, setSnackbar] = useState(null)
 	const dispatch = useDispatch()
@@ -71,40 +73,16 @@ const App = () => {
 
 		bridge.subscribe(({ detail: { type, data } }) => {
 			if (data.hasOwnProperty('error_type') && data.hasOwnProperty('error_data') && type !== 'VKWebAppShowStoryBoxFailed') {
-				const errorType = data.error_type;
-				const errorData = data.error_data;
-				let info = null
-				if (errorType === 'client_error') {
-					info = (
-						<>
-							<div>Код ошибки: {errorData.error_code}</div>
-							<div>Описание: {errorData.error_reason}</div>
-							<div>Подробно: {errorData.error_description}</div>
-						</>
-					)
-				}
-				if (errorType === 'api_error') {
-					info = (
-						<>
-							<div>Код ошибки: {errorData.error_code}</div>
-							<div>Описание: {errorData.error_msg}</div>
-						</>
-					)
-				}
-				if (errorType === 'auth_error') {
-					info = (
-						<>
-							<div>Код ошибки: {errorData.error}</div>
-							<div>Описание: {errorData.error_reason}</div>
-							<div>Подробно: {errorData.error_description}</div>
-						</>
-					)
-				}
+				const info = formErrorInfo(data)
 				setSnackbar(
 					<Snackbar
 						layout='vertical'
 						onClose={() => setSnackbar(null)}
-						before={<Avatar size={24} style={{backgroundColor: 'var(--dynamic_red)'}}><Icon24Error fill='#fff' width={14} height={14} /></Avatar>}
+						before={
+							<Avatar size={24} style={{backgroundColor: 'var(--dynamic_red)'}}>
+								<Icon24Error fill='#fff' width={14} height={14} />
+							</Avatar>
+						}
 						duration={1000}
 					>
 					{info}
@@ -124,7 +102,11 @@ const App = () => {
 						<Snackbar
 							layout='vertical'
 							onClose={() => setSnackbar(null)}
-							before={<Avatar size={24} style={{backgroundColor: 'var(--field_valid_border)'}}><Icon24Error fill='#fff' width={14} height={14} /></Avatar>}
+							before={
+								<Avatar size={24} style={{backgroundColor: 'var(--field_valid_border)'}}>
+									<Icon24Error fill='#fff' width={14} height={14} />
+								</Avatar>
+							}
 							duration={3000}
 						>
 							Опубликовано
@@ -202,7 +184,7 @@ const App = () => {
 					<PanelHeader
 						left={<PanelHeaderBack onClick={() => window.history.back()} />}
 					>
-						Перевод
+						{songName}
 					</PanelHeader>
 					<Translate />
 				</Panel>
