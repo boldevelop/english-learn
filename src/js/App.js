@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import bridge from '@vkontakte/vk-bridge';
 import '@vkontakte/vkui/dist/vkui.css';
-import { Songs } from './components/Songs';
 import {
 	View,
 	Panel,
@@ -24,7 +23,7 @@ import {HistorySetting} from "./components/HistorySettings";
 import {CardSong} from "./components/CardSong";
 import {formErrorInfo} from "./helpers/formErrorInfo";
 import {SnackbarError} from "./components/SnackbarError";
-import {AllSongs} from "./components/AllSongs";
+import {SongAll} from "./components/song/SongAll";
 
 const App = () => {
 	const activePanel = useSelector(state => state.activePanel)
@@ -63,7 +62,11 @@ const App = () => {
 		}
 
 		bridge.subscribe(({ detail: { type, data } }) => {
-			if (data.hasOwnProperty('error_type') && data.hasOwnProperty('error_data') && type !== 'VKWebAppShowStoryBoxFailed') {
+			if (
+				data.hasOwnProperty('error_type')
+				&& data.hasOwnProperty('error_data')
+				&& type !== 'VKWebAppShowStoryBoxFailed'
+			) {
 				const info = formErrorInfo(data)
 				dispatch(setPopout(<SnackbarError message={info} type='error' />))
 			}
@@ -110,16 +113,7 @@ const App = () => {
 				  popout={popout}
 				  modal={modal}
 			>
-				<AllSongs id='all' />
-
-				<Panel id='selected'>
-					<PanelHeader
-						left={<PanelHeaderBack onClick={() => window.history.back()} />}
-					>
-						Треки
-					</PanelHeader>
-					<Songs />
-				</Panel>
+				<SongAll id='all' />
 
 				{/* перенести в отдельный view */}
 				<Panel id='task-0'>

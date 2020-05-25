@@ -1,6 +1,9 @@
 @import './custom-banner.css';
 @import './modal-card.css';
 @import './custom-progress.css';
+@import './custom-fixed-layout.css';
+@import './tags.css';
+@import './search.css';
 
 :root {
     --my-accent: #45046a;

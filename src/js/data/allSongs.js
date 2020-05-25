@@ -1,7 +1,7 @@
 export default [
     {
         "id": 1,
-        "type":"popular",
+        "type":"pop",
         "name": "The Weeknd",
         "songs": [
             {
@@ -23,6 +23,7 @@ export default [
     },
     {
         "id": 8,
+        "type":"EDM",
         "name": "Alan Walker",
         "songs": [
             {
@@ -37,7 +38,7 @@ export default [
     },
     {
         "id": 2,
-        "type": "star",
+        "type": "hip-hop",
         "name": "Eminem",
         "songs": [
             {
@@ -59,7 +60,7 @@ export default [
     },
     {
         "id": 3,
-        "type": "star",
+        "type": "pop",
         "name": "Robin Schulz",
         "songs": [
             {
@@ -88,7 +89,7 @@ export default [
     },
     {
         "id": 4,
-        "type": "rap",
+        "type": "hip-hop",
         "name": "Roddy Ricch",
         "songs": [
             {
@@ -118,7 +119,7 @@ export default [
     },
     {
         "id": 6,
-        "type": "popular",
+        "type": "pop",
         "name": "Trevor Daniel",
         "songs": [
             {
@@ -133,7 +134,7 @@ export default [
     },
     {
         "id": 7,
-        "type": "pop",
+        "type": "hip-hop",
         "name": "Drake",
         "songs": [
             {
@@ -148,7 +149,7 @@ export default [
     },
     {
         "id": 9,
-        "type": "rap",
+        "type": "hip-hop",
         "name": "Rich The Kid",
         "songs": [
             {

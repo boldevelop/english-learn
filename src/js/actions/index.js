@@ -2,7 +2,6 @@ import * as TYPE from "../constants/actionTypes"
 
 export const initialLoad = () => ({ type: TYPE.INITIAL_LOAD })
 export const setUser = user => ({ type: TYPE.SET_USER, payload: user })
-export const setSelectedCompositorsSong = compositorData => ({ type: TYPE.SET_SELECTED_COMPOSITORS_SONG, payload: compositorData })
 export const setSelectedCompositor = compositorData => ({ type: TYPE.SET_SELECTED_COMPOSITOR, payload: compositorData })
 export const setSelectedSong = songData => ({ type: TYPE.SET_SELECTED_SONG, payload: songData })
 export const setSongs = songs => ({ type: TYPE.SET_SONGS, payload: songs })
@@ -24,3 +23,7 @@ export const pushCompletedTask = (id) => ({ type: TYPE.PUSH_COMPLETED_TASK, payl
 export const clearCompletedTask = () => ({ type: TYPE.CLEAR_COMPLETED_TASK })
 export const setSelectedStroke = strokeObj => ({ type: TYPE.SET_SELECTED_STROKE, payload: strokeObj })
 export const publishHistory = ({ canvas, withTranslate, bgColor, textColor }) => ({ type: TYPE.PUBLISH_HISTORY, payload: { canvas, withTranslate, bgColor, textColor } })
+export const setFilterSong = value => ({ type: TYPE.SET_FILTER_SONG, payload: value })
+export const setSearchValue = value => ({ type: TYPE.SET_SEARCH_VALUE, payload: value })
+export const setTag = value => ({ type: TYPE.SET_TAG, payload: value })
+export const setFiltered = bool => ({ type: TYPE.SET_FILTERED, payload: bool })

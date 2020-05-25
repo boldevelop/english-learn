@@ -1,0 +1,13 @@
+.search__trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search__trigger-icon {
+    transition: all .3s;
+}
+
+.search__content {
+    padding-top: 16px;
+}

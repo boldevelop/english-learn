@@ -1,10 +1,10 @@
 import { Banner, InfoRow, Progress} from "@vkontakte/vkui";
 import React from "react";
-import {getCompleteTasksOfSong} from "../helpers";
+import {getCompleteTasksOfSong} from "../../helpers";
 import {useDispatch, useSelector} from "react-redux";
 import Icon28CheckCircleOutline from '@vkontakte/icons/dist/28/check_circle_outline';
 import {SongHeader} from "./SongHeader";
-import {setSelectedCompositor, setSelectedSong, toggleModalCard} from "../actions";
+import {setSelectedCompositor, setSelectedSong, toggleModalCard} from "../../actions";
 
 export const Song = ({ song, compositor }) => {
     const progress = useSelector(state => state.progress)

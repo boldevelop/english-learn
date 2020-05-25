@@ -19,23 +19,42 @@ const initialState = {
 
     modalCard: null,
     /*
-    {
-      compId: comp.id,
-      completeTasksIds: [],
-      songs: [
         {
-            songId: song.id
-            completeTasksIds: []
+          compId: comp.id,
+          completeTasksIds: [],
+          songs: [
+            {
+                songId: song.id
+                completeTasksIds: []
+            }
+          ]
         }
-      ]
-    }
      */
     progress: [],
     currentCompletedTasks: [],
+
+    searchValue: '',
+    filtered: false,
+    activeTag: ''
 };
 
 function rootReducer(state = initialState, action) {
     switch (action.type) {
+        case TYPE.SET_FILTERED:
+            return {
+                ...state,
+                filtered: action.payload
+            }
+        case TYPE.SET_SEARCH_VALUE:
+            return {
+                ...state,
+                searchValue: action.payload
+            }
+        case TYPE.SET_TAG:
+            return {
+                ...state,
+                activeTag: action.payload
+            }
         case TYPE.SET_SELECTED_STROKE:
             return {
                 ...state,
